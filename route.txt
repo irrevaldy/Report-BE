@@ -1,0 +1,76 @@
+/* Login & logout */
+Route::post('/login', ['uses' => 'login\loginController@login']);
+{
+	"username" : "default_user",
+	"password" : "6e155671c3ef35b6550e3a2d055a6522bc68582f2c9e4148b2f1e6dc5e465318"
+}
+
+Route::post('/logout/{username}', ['uses' => 'login\loginController@logout']);
+
+/* Global function */
+Route::get('/host_data', ['uses' => 'globalController@getHostData']);
+Route::get('/corporate_data', ['uses' => 'globalController@getCorporateData']);
+Route::get('/merchant_data/{corporate_id}', ['uses' => 'globalController@getMerchantData']);
+Route::get('/card_data', ['uses' => 'globalController@getCardData']);
+
+/* Search transaction */
+Route::post('/search_transaction', ['uses' => 'searchTransactionController@search']);
+{
+	"corporate" : "1", // global function
+	"merchant" : "1", // global function
+	"branch_code" : "",
+	"store_code" : "",
+	"host" : "B002", // global function
+	"transaction_type" : "sale",
+	"prepaid_card_number" : "6032984012585901", // prepaid card number terisi jika transaction type = prepaid topup
+	"approval_code" : "",
+	"mid" : "",
+	"tid" : "",
+	"transaction_date" : "20170103"
+}
+
+pilihan transaction type :
+- loyalty - Loyalty
+- installment - Installment
+- prepaid_sale - Prepaid Sale
+- prepaid_topup - Prepaid Top Up
+- sale - Sale
+- tarik_tunai - Tarik Tunai
+
+/* Summary transaction */
+Route::post('/summary_transaction', ['uses' => 'summaryTransactionController@summaryTransaction']);
+{
+	"host" : "", // global function
+	"card_type" : "1", // global function
+	"transaction_type" : "sale",
+	"corporate" : "",
+	"merchant" : "",
+	"status" : "a",
+	"transaction_month" : "201701",
+	"response_code" : "" // response harus diisi ketika status dipilih 'D'
+}
+
+pilihan transaction type :
+- prepaid_sale - Prepaid Sale
+- prepaid_topup - Prepaid Top Up
+- sale - Sale
+
+pilihan status :
+- s - Settled
+- d - Declined
+
+
+Route::post('/summary_response_code', ['uses' => 'summaryTransactionController@summaryResponseCode']);
+{
+	"host" : "", // global function
+	"transaction_type" : "sale",
+	"corporate" : "", // global function
+	"merchant" : "", // global function
+	"transaction_month" : "201701"
+}
+
+pilihan transaction type :
+- prepaid_sale - Prepaid Sale
+- prepaid_topup - Prepaid Top Up
+- sale - Sale
+
