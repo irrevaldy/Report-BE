@@ -22,11 +22,12 @@ class passwordController extends Controller
 		DB::beginTransaction();
 		
 		try{
-			$username     = $request->input('username');
-            $old_password = $request->input('old_password');
-            $new_password = $request->input('new_password');
+            $username               = $request->input('username');
+            $old_password_oldhash   = $request->input('old_password_oldhash');
+            $old_password_newhash   = $request->input('old_password_newhash');
+            $new_password           = $request->input('new_password');
 			
-			$check_old_password = DB::select("[spVDWH_UpdateUserPassword] '$username', '$old_password', '$new_password'");
+			$check_old_password = DB::select("[spVDWH_UpdateUserPassword] '$username', '$old_password_oldhash', '$old_password_newhash', '$new_password'");
             $msg_SQL = $check_old_password[0]->result;
             		
             if($msg_SQL == "SUCCESS") {

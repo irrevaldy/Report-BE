@@ -10,6 +10,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 use Session;
 use Exception;
+use ZIPARCHIVE;
+use Storage;
 
 class otherReportController extends Controller
 {
@@ -270,10 +272,10 @@ class otherReportController extends Controller
       $arrselected = array();
       $countas = 0;
 
-      /*if($branch == 'All Branch')
+      if($branch == 'All Branch')
       {
-        $branch = '';
-      }*/
+        $branch = 'AllBranch';
+      }
       $now = date("YmdHis");
 
       $dir = "C://generate/";
@@ -491,6 +493,67 @@ class otherReportController extends Controller
     }
   }
 
+  public function zipListReport(Request $request)
+  {
+    try
+    {
+        $checkedA = $request->checkedA;
+       //$checkedA = ["DetailReportByHost_20180629_0000_1.csv","DetailReportByHost_20180629_6789_1.csv","DetailReportByHost_20180629_A003_1.csv","DetailReportByHost_20180629_AllBranch_1.csv","DetailReportByHost_20180629_BGD_1.csv","DetailReportByHost_20180629_G001_1.csv","DetailReportByHost_20180629_TEST_1.csv","DetailReportByHost_20180630_0000_1.csv","DetailReportByHost_20180630_6789_1.csv","DetailReportByHost_20180630_A003_1.csv"]  ;
+
+      $dir = "C://generate/";
+
+      $zipname = time().'AllReport.zip';
+      $public_dir = storage_path("app");
+
+      $zip = new ZipArchive;
+
+      if (file_exists($public_dir.$zipname)) {
+          $zip->open($public_dir . '/' . $zipname, ZIPARCHIVE::OVERWRITE );
+      } else {
+          $zip->open($public_dir . '/' . $zipname, ZIPARCHIVE::CREATE );
+      }
+
+      foreach($checkedA as $file)
+      {
+        //echo $file;
+        //echo "<br>";
+        $zip->addFile($dir.$file, $file);
+      }
+
+      $zip->close();
+
+
+
+    //  Storage::disk('local')->put('AllReport.zip', $zipname);
+      //return response()->download($zipname);
+    //header('Content-Type: application/zip');
+      //header('Content-disposition: attachment; filename='.$zipname);
+      // header('Content-Length: ' . filesize($zipname));
+      // header("Pragma: no-cache");
+      // header("Expires: 0");
+
+      $header = array(
+                   'Content-Type' => 'application/octet-stream',
+               );
+      return response()->download(storage_path("app/".$zipname), $zipname, $header);
+      //return Storage::download($zipname);
+
+      // $res['success'] = true;
+      // //$res['total'] = count($a);
+      // $res['result'] = $zipname;
+      // //
+      // return response($res);
+
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
   public function listReconReport(Request $request)
   {
     try
@@ -625,7 +688,7 @@ class otherReportController extends Controller
 
       if($branch == 'All Branch')
       {
-        $branch = '';
+        $branch = 'AllBranch';
       }
       $now = date("YmdHis");
 

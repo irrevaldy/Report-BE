@@ -116,7 +116,6 @@ Route::get('/serviceprovider_get_data', ['uses' => 'serviceproviderDashboardCont
 
 Route::post('/list_detail_report', ['uses' => 'otherReportController@listDetailReport']);
 Route::post('/list_detail_report_filtered', ['uses' => 'otherReportController@listDetailReportFiltered']);
-
 Route::post('/list_recon_report', ['uses' => 'otherReportController@listReconReport']);
 Route::post('/list_recon_report_filtered', ['uses' => 'otherReportController@listReconReportFiltered']);
 
@@ -130,31 +129,8 @@ Route::post('/list_detail_report_filtered_branch', ['uses' => 'otherReportContro
 Route::post('/list_recon_report_branch', ['uses' => 'otherReportController@listReconReportBranch']);
 Route::post('/list_recon_report_filtered_branch', ['uses' => 'otherReportController@listReconReportFilteredBranch']);
 
-Route::post('/zip_list_report', ['uses' => 'otherReportController@zipListReport']);
 
 // Route::get('/provider_get_data', ['uses' => 'providerDashboardController@getdata']);
-
-/* Dashboard Data */
-Route::get('/data_dashboard_merchant/{user_id}',                        ['uses' => 'merchantDashboardController@getData']);
-Route::get('/data_dashboard_branch/{user_id}',                          ['uses' => 'branchDashboardController@getData']);
-Route::get('/data_dashboard_provider/{user_id}',                        ['uses' => 'providerDashboardController@getData']);
-Route::get('/data_dashboard_corporate/{user_id}',                       ['uses' => 'corporateDashboardController@getData']);
-Route::get('/data_dashboard_store/{user_id}',                           ['uses' => 'storeDashboardController@getData']);
-Route::get('/data_dashboard_acquirer/{user_id}',                        ['uses' => 'acquirerDashboardController@getData']);
-
-Route::get('/transaction_volume/{user_id}', ['uses' => 'merchantDashboardController@getTransactionVolume']);
-Route::get('/transaction_count/{user_id}', ['uses' => 'merchantDashboardController@getTransactionCount']);
-Route::get('/top5acq_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5AcquirerTransactionVolume']);
-Route::get('/top5acq_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5AcquirerTransactionCount']);
-Route::get('/top5bra_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5BranchTransactionVolume']);
-Route::get('/top5bra_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5BranchTransactionCount']);
-Route::get('/top5sto_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5StoreTransactionVolume']);
-Route::get('/top5sto_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5StoreTransactionCount']);
-Route::get('/top5ctp_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5CardTypeTransactionVolume']);
-Route::get('/top5ctp_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5CardTypeTransactionCount']);
-Route::get('/top5ttp_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5TransactionTypeTransactionVolume']);
-Route::get('/top5ttp_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5TransactionTypeTransactionCount']);
-
 
 /* Change Password */
 Route::post('/change_password_data', 									['uses' => 'passwordController@updatePasswordData']);

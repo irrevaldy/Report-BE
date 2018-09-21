@@ -40,7 +40,6 @@ class LoginController extends Controller
 				$result['success'] = false;
 				$result['message'] = 'Username or password is incorrect !';
 			} else {
-				$user_id 				= $check_exist_user[0]->user_id;
 				$name 				= $check_exist_user[0]->name;
 				$user_subgroup_id 	= $check_exist_user[0]->user_subgroup_id;
 				$flag_old_password 	= $check_exist_user[0]->flag_old_password;
@@ -50,7 +49,6 @@ class LoginController extends Controller
 				$result['success'] = true;
 				$result['message'] = 'Login success, '.$name.' !';
 				$result['data'] = array(
-									"user_id" => $user_id,
 									"name" => $name,
 									"api_token" => $api_token,
 									"user_subgroup_id" => $user_subgroup_id,
@@ -61,8 +59,7 @@ class LoginController extends Controller
 				// 					->where('password', $password)
 				// 					->update(['token_login' => $api_token]);
 				$update_token = DB::statement("[spVDWH_UpdateUserToken] '$username', '$api_token'");
-				
-				Session::put('user_id', $user_id);
+									
 				Session::put('username', $username);
 				Session::put('name', $name);
 				Session::put('api_token', $api_token);
@@ -76,35 +73,6 @@ class LoginController extends Controller
 					$user_id 	= $get_user_detail[0]->user_id;
 					$name 		= $get_user_detail[0]->name;
 					$datetime	= date("jS F Y H:i:s");
-
-					foreach ($get_user_detail as $key => $value) {
-						if("DASH_ACQ_V" == $value->privilege_code){
-							$dashboard = "dashacquirer";
-						}
-						else if("DASH_PROV_V" == $value->privilege_code){
-							$dashboard = "dashprovider";
-						}
-						else if("DASH_CORP_V" == $value->privilege_code){
-							$dashboard = "dashcorporate";
-						}
-						else if("DASH_MER_V" == $value->privilege_code){
-							$dashboard = "dashmerchant";
-						}
-						else if("DASH_BRA_V" == $value->privilege_code){
-							$dashboard = "dashbranch";
-						}
-						else if("DASH_STO_V" == $value->privilege_code){
-							$dashboard = "dashstore";
-						}
-						else{
-							$dashboard = "index";
-						}
-
-						break;
-					}
-
-					$result['dashboard'] = $dashboard;
-					
 					
 				} else {
 					$res['success'] = false;
