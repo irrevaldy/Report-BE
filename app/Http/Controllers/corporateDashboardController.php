@@ -11,7 +11,7 @@ use GuzzleHttp\Promise;
 use Session;
 use Exception;
 
-class providerDashboardController extends Controller
+class corporateDashboardController extends Controller
 {
     public function __construct(Request $request)
     {
@@ -48,10 +48,10 @@ class providerDashboardController extends Controller
         $total_trx_failed 	= $q_get_total_summary[0]->total_trx_failed;
         $total_trx_count 	= $total_trx_success+$total_trx_failed;
 
-        $res['total_acquirer'] 		= $total_acquirer;
-        $res['total_corporate']     = $total_corporate;
+        // $res['total_acquirer'] 		= $total_acquirer;
+        // $res['total_corporate']     = $total_corporate;
         $res['total_merchant'] 		= $total_merchant;
-        // $res['total_branch'] 		= $total_branch;
+        $res['total_branch'] 		= $total_branch;
         $res['total_store'] 		= $total_store;
         $res['total_terminal'] 		= $total_terminal;
         $res['terminal_active'] 	= $terminal_active;
@@ -178,12 +178,10 @@ class providerDashboardController extends Controller
 
 
             }
-
-
         }
 
         $dataset_volume_acquirer = array();
-      //red, orange, yellow, green, blue
+        //red, orange, yellow, green, blue
         $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
         $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
         $i = 0;
@@ -209,7 +207,6 @@ class providerDashboardController extends Controller
 
         $res['success'] = true;
         $res['top5acq_trx_volume'] 	= $data_top5acquirer_trx_volume;
-
 
         return response($res);
       }
@@ -237,46 +234,14 @@ class providerDashboardController extends Controller
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         $q_get_top5_acquirer = DB::select("spVDWH_Top5AcquirerHighestTrx '$get_past3_month', '$get_current_month', '$username'");
-        // $q_get_top5_acquirer = json_encode($q_get_top5_acquirer);
-        // $q_get_top5_acquirer = json_decode($q_get_top5_acquirer, true);
 
-
-        $data_top5acquirer_trx_volume 							            = array();
-        $data_top5acquirer_trx_volume['label']					        = array();
-        $data_top5acquirer_trx_volume['dataset_list']['label']	= array();
         $data_top5acquirer_trx_count 							            = array();
         $data_top5acquirer_trx_count['label']					        = array();
         $data_top5acquirer_trx_count['dataset_list']['label']	= array();
 
         foreach( $q_get_top5_acquirer as $key => $value ) {
 
-            //TOP 5 ACQUIRER TRX VOLUME
-            if($value->DATA_TYPE == "VOLUME"){
-
-                $label = substr($value->TRX_MONTHS, 4);
-
-                if (substr($label, 0, 1) == "0") {
-                $label = substr($label, 1);
-                }
-
-                $month = $arr_mon[$label];
-                $year = substr($value->TRX_MONTHS, 2, 2);
-                $text_month = $month." '".$year;
-
-
-                if( !in_array($text_month, $data_top5acquirer_trx_volume['label']) ) {
-                $data_top5acquirer_trx_volume['label'][] = $text_month;
-                }
-
-                if( !in_array( $value->BANK_NAME, $data_top5acquirer_trx_volume['dataset_list']['label']) ) {
-                $data_top5acquirer_trx_volume['dataset_list']['label'][]	= $value->BANK_NAME;
-                }
-
-                $data_top5acquirer_trx_volume['data'][ $value->BANK_NAME ][] = $value->TOTAL;
-
-
-            }//TOP 5 ACQUIRER TRX COUNT
-            else if($value->DATA_TYPE == "COUNT"){
+          if($value->DATA_TYPE == "COUNT"){
 
                 $label = substr($value->TRX_MONTHS, 4);
 
@@ -302,28 +267,10 @@ class providerDashboardController extends Controller
 
         }
 
-        $dataset_volume_acquirer = array();
-        $dataset_count_acquirer = array();
+          $dataset_count_acquirer = array();
         //red, orange, yellow, green, blue
         $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
         $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
-        $i = 0;
-
-        foreach( $data_top5acquirer_trx_volume['dataset_list']['label'] as $key => $value ) {
-            $data_trx_volume = array(
-                "label" 			=> $value,
-                // "fill" 				=> false,
-                //"backgroundColor"	=> "rgba(122,224,119,0.0)",
-                //"borderColor"		=> $data_total_trx['dataset_list']['color'][$key],
-                "backgroundColor"	=> $bg_color[$i],
-                "borderColor"		=> $color[$i],
-                "data"				=> $data_top5acquirer_trx_volume['data'][ $value ]
-            );
-            $i++;
-            $dataset_volume_acquirer[] = $data_trx_volume;
-        }
-
-        $data_top5acquirer_trx_volume['dataset_list'] 	= $dataset_volume_acquirer;
 
         $i = 0;
         foreach( $data_top5acquirer_trx_count['dataset_list']['label'] as $key => $value ) {
@@ -365,7 +312,7 @@ class providerDashboardController extends Controller
     {
       try
       {
-        //get user data
+        //get u3ser data
         $q_get_user_data = DB::select("spVDWH_GetUserData '$user_id'");
         $username = $q_get_user_data[0]->user_name;
 
@@ -376,7 +323,11 @@ class providerDashboardController extends Controller
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         $q_get_top5_merchant = DB::select("spVDWH_Top5MerchantHighestTrx '$get_past3_month', '$get_current_month', '$username'");
-          $data_top5merchant_trx_volume 							            = array();
+        // $q_get_top5_merchant = json_encode($q_get_top5_merchant);
+        // $q_get_top5_merchant = json_decode($q_get_top5_merchant, true);
+
+
+        $data_top5merchant_trx_volume 							            = array();
         $data_top5merchant_trx_volume['label']					        = array();
         $data_top5merchant_trx_volume['dataset_list']['label']	= array();
 
@@ -408,6 +359,7 @@ class providerDashboardController extends Controller
 
 
             }
+
         }
 
         $dataset_volume_merchant = array();
@@ -431,6 +383,7 @@ class providerDashboardController extends Controller
         }
 
         $data_top5merchant_trx_volume['dataset_list'] 	= $dataset_volume_merchant;
+
 
         $data_top5merchant_trx_volume = json_encode($data_top5merchant_trx_volume);
         $data_top5merchant_trx_volume = json_decode($data_top5merchant_trx_volume, true);
@@ -469,13 +422,12 @@ class providerDashboardController extends Controller
         // $q_get_top5_merchant = json_decode($q_get_top5_merchant, true);
 
 
-          $data_top5merchant_trx_count 							            = array();
+        $data_top5merchant_trx_count 							            = array();
         $data_top5merchant_trx_count['label']					        = array();
         $data_top5merchant_trx_count['dataset_list']['label']	= array();
 
         foreach( $q_get_top5_merchant as $key => $value ) {
 
-            //TOP 5 MERCHANT TRX VOLUME
           if($value->DATA_TYPE == "COUNT"){
 
                 $label = substr($value->TRX_MONTHS, 4);
@@ -502,10 +454,11 @@ class providerDashboardController extends Controller
 
         }
 
-            $dataset_count_merchant = array();
+        $dataset_count_merchant = array();
         //red, orange, yellow, green, blue
         $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
         $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
+
 
         $i = 0;
         foreach( $data_top5merchant_trx_count['dataset_list']['label'] as $key => $value ) {
@@ -544,7 +497,6 @@ class providerDashboardController extends Controller
         return response($res);
       }
     }
-
 
     public function getTop5CardTypeTransactionVolume(Request $request, $user_id)
     {
@@ -652,17 +604,14 @@ class providerDashboardController extends Controller
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         $q_get_top5_cardtype = DB::select("spVDWH_Top5CardtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
-        // $q_get_top5_cardtype = json_encode($q_get_top5_cardtype);
-        // $q_get_top5_cardtype = json_decode($q_get_top5_cardtype, true);
 
-            $data_top5cardtype_trx_count 							              = array();
+        $data_top5cardtype_trx_count 							              = array();
         $data_top5cardtype_trx_count['label']					          = array();
         $data_top5cardtype_trx_count['dataset_list']['label']	  = array();
 
         foreach( $q_get_top5_cardtype as $key => $value ) {
 
-
-          if($value->DATA_TYPE == "COUNT"){
+            if($value->DATA_TYPE == "COUNT"){
 
                 $label = substr($value->TRX_MONTHS, 4);
 
@@ -687,8 +636,7 @@ class providerDashboardController extends Controller
             }
 
         }
-
-          $dataset_count_cardtype = array();
+        $dataset_count_cardtype = array();
         //red, orange, yellow, green, blue
         $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
         $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
@@ -709,7 +657,6 @@ class providerDashboardController extends Controller
         }
 
         $data_top5cardtype_trx_count['dataset_list'] 	= $dataset_count_cardtype;
-
 
         $data_top5cardtype_trx_count = json_encode($data_top5cardtype_trx_count);
         $data_top5cardtype_trx_count = json_decode($data_top5cardtype_trx_count, true);
@@ -746,62 +693,61 @@ class providerDashboardController extends Controller
         $q_get_top5_trxtype = DB::select("spVDWH_Top5TrxtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
 
 
-      $data_top5trxtype_trx_volume 							            = array();
-      $data_top5trxtype_trx_volume['label']					        = array();
-      $data_top5trxtype_trx_volume['dataset_list']['label']	= array();
+        $data_top5trxtype_trx_volume 							            = array();
+        $data_top5trxtype_trx_volume['label']					        = array();
+        $data_top5trxtype_trx_volume['dataset_list']['label']	= array();
 
-      foreach( $q_get_top5_trxtype as $key => $value ) {
+        foreach( $q_get_top5_trxtype as $key => $value ) {
 
-          //TOP 5 TRXTYPE TRX VOLUME
-          if($value->DATA_TYPE == "VOLUME"){
+            //TOP 5 TRXTYPE TRX VOLUME
+            if($value->DATA_TYPE == "VOLUME"){
 
-              $label = substr($value->TRX_MONTHS, 4);
+                $label = substr($value->TRX_MONTHS, 4);
 
-              if (substr($label, 0, 1) == "0") {
-              $label = substr($label, 1);
-              }
+                if (substr($label, 0, 1) == "0") {
+                $label = substr($label, 1);
+                }
 
-              $month = $arr_mon[$label];
-              $year = substr($value->TRX_MONTHS, 2, 2);
-              $text_month = $month." '".$year;
-
-
-              if( !in_array($text_month, $data_top5trxtype_trx_volume['label']) ) {
-              $data_top5trxtype_trx_volume['label'][] = $text_month;
-              }
-
-              if( !in_array( $value->TRXTYPE_NAME, $data_top5trxtype_trx_volume['dataset_list']['label']) ) {
-              $data_top5trxtype_trx_volume['dataset_list']['label'][]	= $value->TRXTYPE_NAME;
-              }
-
-              $data_top5trxtype_trx_volume['data'][ $value->TRXTYPE_NAME ][] = $value->TOTAL;
+                $month = $arr_mon[$label];
+                $year = substr($value->TRX_MONTHS, 2, 2);
+                $text_month = $month." '".$year;
 
 
-          }
+                if( !in_array($text_month, $data_top5trxtype_trx_volume['label']) ) {
+                $data_top5trxtype_trx_volume['label'][] = $text_month;
+                }
 
-      }
+                if( !in_array( $value->TRXTYPE_NAME, $data_top5trxtype_trx_volume['dataset_list']['label']) ) {
+                $data_top5trxtype_trx_volume['dataset_list']['label'][]	= $value->TRXTYPE_NAME;
+                }
 
-      $dataset_volume_trxtype = array();
+                $data_top5trxtype_trx_volume['data'][ $value->TRXTYPE_NAME ][] = $value->TOTAL;
 
-      $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
-      $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
-      $i = 0;
 
-      foreach( $data_top5trxtype_trx_volume['dataset_list']['label'] as $key => $value ) {
-          $data_trx_volume = array(
-              "label" 			=> $value,
-              // "fill" 				=> false,
-              //"backgroundColor"	=> "rgba(122,224,119,0.0)",
-              //"borderColor"		=> $data_total_trx['dataset_list']['color'][$key],
-              "backgroundColor"	=> $bg_color[$i],
-              "borderColor"		=> $color[$i],
-              "data"				=> $data_top5trxtype_trx_volume['data'][ $value ]
-          );
-          $i++;
-          $dataset_volume_trxtype[] = $data_trx_volume;
-      }
+            }
+        }
 
-      $data_top5trxtype_trx_volume['dataset_list'] 	= $dataset_volume_trxtype;
+        $dataset_volume_trxtype = array();
+        //red, orange, yellow, green, blue
+        $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
+        $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
+        $i = 0;
+
+        foreach( $data_top5trxtype_trx_volume['dataset_list']['label'] as $key => $value ) {
+            $data_trx_volume = array(
+                "label" 			=> $value,
+                // "fill" 				=> false,
+                //"backgroundColor"	=> "rgba(122,224,119,0.0)",
+                //"borderColor"		=> $data_total_trx['dataset_list']['color'][$key],
+                "backgroundColor"	=> $bg_color[$i],
+                "borderColor"		=> $color[$i],
+                "data"				=> $data_top5trxtype_trx_volume['data'][ $value ]
+            );
+            $i++;
+            $dataset_volume_trxtype[] = $data_trx_volume;
+        }
+
+        $data_top5trxtype_trx_volume['dataset_list'] 	= $dataset_volume_trxtype;
 
         $data_top5trxtype_trx_volume = json_encode($data_top5trxtype_trx_volume);
         $data_top5trxtype_trx_volume = json_decode($data_top5trxtype_trx_volume, true);
@@ -827,6 +773,7 @@ class providerDashboardController extends Controller
     {
       try
       {
+        //get user data
         $q_get_user_data = DB::select("spVDWH_GetUserData '$user_id'");
         $username = $q_get_user_data[0]->user_name;
 
@@ -836,66 +783,61 @@ class providerDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-
         $q_get_top5_trxtype = DB::select("spVDWH_Top5TrxtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
-      // $q_get_top5_trxtype = json_encode($q_get_top5_trxtype);
-      // $q_get_top5_trxtype = json_decode($q_get_top5_trxtype, true);
-
 
         $data_top5trxtype_trx_count 							              = array();
-      $data_top5trxtype_trx_count['label']					          = array();
-      $data_top5trxtype_trx_count['dataset_list']['label']	  = array();
+        $data_top5trxtype_trx_count['label']					          = array();
+        $data_top5trxtype_trx_count['dataset_list']['label']	  = array();
 
-      foreach( $q_get_top5_trxtype as $key => $value ) {
+        foreach( $q_get_top5_trxtype as $key => $value ) {
 
-        if($value->DATA_TYPE == "COUNT"){
+          if($value->DATA_TYPE == "COUNT"){
 
-              $label = substr($value->TRX_MONTHS, 4);
+                $label = substr($value->TRX_MONTHS, 4);
 
-              if (substr($label, 0, 1) == "0") {
-              $label = substr($label, 1);
-              }
+                if (substr($label, 0, 1) == "0") {
+                $label = substr($label, 1);
+                }
 
-              $month = $arr_mon[$label];
-              $year = substr($value->TRX_MONTHS, 2, 2);
-              $text_month = $month." '".$year;
+                $month = $arr_mon[$label];
+                $year = substr($value->TRX_MONTHS, 2, 2);
+                $text_month = $month." '".$year;
 
 
-              if( !in_array($text_month, $data_top5trxtype_trx_count['label']) ) {
-              $data_top5trxtype_trx_count['label'][] = $text_month;
-              }
+                if( !in_array($text_month, $data_top5trxtype_trx_count['label']) ) {
+                $data_top5trxtype_trx_count['label'][] = $text_month;
+                }
 
-              if( !in_array( $value->TRXTYPE_NAME, $data_top5trxtype_trx_count['dataset_list']['label']) ) {
-              $data_top5trxtype_trx_count['dataset_list']['label'][]	= $value->TRXTYPE_NAME;
-              }
+                if( !in_array( $value->TRXTYPE_NAME, $data_top5trxtype_trx_count['dataset_list']['label']) ) {
+                $data_top5trxtype_trx_count['dataset_list']['label'][]	= $value->TRXTYPE_NAME;
+                }
 
-              $data_top5trxtype_trx_count['data'][ $value->TRXTYPE_NAME ][] = $value->TOTAL;
-          }
+                $data_top5trxtype_trx_count['data'][ $value->TRXTYPE_NAME ][] = $value->TOTAL;
+            }
 
-      }
+        }
 
-      $dataset_count_trxtype = array();
-      //red, orange, yellow, green, blue
-      $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
-      $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
+        $dataset_count_trxtype = array();
+        //red, orange, yellow, green, blue
+        $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
+        $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
 
-      $i = 0;
-      foreach( $data_top5trxtype_trx_count['dataset_list']['label'] as $key => $value ) {
-          $data_trx_count = array(
-              "label" 			=> $value,
-              // "fill" 				=> false,
-              //"backgroundColor"	=> "rgba(122,224,119,0.0)",
-              //"borderColor"		=> $data_total_trx['dataset_list']['color'][$key],
-              "backgroundColor"	=> $bg_color[$i],
-              "borderColor"		=> $color[$i],
-              "data"				=> $data_top5trxtype_trx_count['data'][ $value ]
-          );
-          $i++;
-          $dataset_count_trxtype[] = $data_trx_count;
-      }
+        $i = 0;
+        foreach( $data_top5trxtype_trx_count['dataset_list']['label'] as $key => $value ) {
+            $data_trx_count = array(
+                "label" 			=> $value,
+                // "fill" 				=> false,
+                //"backgroundColor"	=> "rgba(122,224,119,0.0)",
+                //"borderColor"		=> $data_total_trx['dataset_list']['color'][$key],
+                "backgroundColor"	=> $bg_color[$i],
+                "borderColor"		=> $color[$i],
+                "data"				=> $data_top5trxtype_trx_count['data'][ $value ]
+            );
+            $i++;
+            $dataset_count_trxtype[] = $data_trx_count;
+        }
 
-      $data_top5trxtype_trx_count['dataset_list'] 	= $dataset_count_trxtype;
-
+        $data_top5trxtype_trx_count['dataset_list'] 	= $dataset_count_trxtype;
 
         $data_top5trxtype_trx_count = json_encode($data_top5trxtype_trx_count);
         $data_top5trxtype_trx_count = json_decode($data_top5trxtype_trx_count, true);

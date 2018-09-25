@@ -135,25 +135,78 @@ Route::post('/zip_list_report', ['uses' => 'otherReportController@zipListReport'
 // Route::get('/provider_get_data', ['uses' => 'providerDashboardController@getdata']);
 
 /* Dashboard Data */
-Route::get('/data_dashboard_merchant/{user_id}',                        ['uses' => 'merchantDashboardController@getData']);
-Route::get('/data_dashboard_branch/{user_id}',                          ['uses' => 'branchDashboardController@getData']);
-Route::get('/data_dashboard_provider/{user_id}',                        ['uses' => 'providerDashboardController@getData']);
-Route::get('/data_dashboard_corporate/{user_id}',                       ['uses' => 'corporateDashboardController@getData']);
-Route::get('/data_dashboard_store/{user_id}',                           ['uses' => 'storeDashboardController@getData']);
-Route::get('/data_dashboard_acquirer/{user_id}',                        ['uses' => 'acquirerDashboardController@getData']);
+Route::get('/merchant/data_dashboard_merchant/{user_id}',                        ['uses' => 'merchantDashboardController@getData']);
+Route::get('/branch/data_dashboard_branch/{user_id}',                          ['uses' => 'branchDashboardController@getData']);
+Route::get('/provider/data_dashboard_provider/{user_id}',                        ['uses' => 'providerDashboardController@getData']);
+Route::get('/corporate/data_dashboard_corporate/{user_id}',                       ['uses' => 'corporateDashboardController@getData']);
+Route::get('/store/data_dashboard_store/{user_id}',                           ['uses' => 'storeDashboardController@getData']);
+Route::get('/acquirer/data_dashboard_acquirer/{user_id}',                        ['uses' => 'acquirerDashboardController@getData']);
 
-Route::get('/transaction_volume/{user_id}', ['uses' => 'merchantDashboardController@getTransactionVolume']);
-Route::get('/transaction_count/{user_id}', ['uses' => 'merchantDashboardController@getTransactionCount']);
-Route::get('/top5acq_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5AcquirerTransactionVolume']);
-Route::get('/top5acq_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5AcquirerTransactionCount']);
-Route::get('/top5bra_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5BranchTransactionVolume']);
-Route::get('/top5bra_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5BranchTransactionCount']);
-Route::get('/top5sto_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5StoreTransactionVolume']);
-Route::get('/top5sto_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5StoreTransactionCount']);
-Route::get('/top5ctp_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5CardTypeTransactionVolume']);
-Route::get('/top5ctp_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5CardTypeTransactionCount']);
-Route::get('/top5ttp_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5TransactionTypeTransactionVolume']);
-Route::get('/top5ttp_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5TransactionTypeTransactionCount']);
+Route::get('/merchant/transaction_volume/{user_id}', ['uses' => 'merchantDashboardController@getTransactionVolume']);
+Route::get('/merchant/transaction_count/{user_id}', ['uses' => 'merchantDashboardController@getTransactionCount']);
+Route::get('/merchant/top5acq_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5AcquirerTransactionVolume']);
+Route::get('/merchant/top5acq_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5AcquirerTransactionCount']);
+Route::get('/merchant/top5bra_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5BranchTransactionVolume']);
+Route::get('/merchant/top5bra_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5BranchTransactionCount']);
+Route::get('/merchant/top5sto_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5StoreTransactionVolume']);
+Route::get('/merchant/top5sto_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5StoreTransactionCount']);
+Route::get('/merchant/top5ctp_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5CardTypeTransactionVolume']);
+Route::get('/merchant/top5ctp_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5CardTypeTransactionCount']);
+Route::get('/merchant/top5ttp_trxvolume/{user_id}', ['uses' => 'merchantDashboardController@getTop5TransactionTypeTransactionVolume']);
+Route::get('/merchant/top5ttp_trxcount/{user_id}', ['uses' => 'merchantDashboardController@getTop5TransactionTypeTransactionCount']);
+
+Route::get('/provider/transaction_volume/{user_id}', ['uses' => 'providerDashboardController@getTransactionVolume']);
+Route::get('/provider/transaction_count/{user_id}', ['uses' => 'providerDashboardController@getTransactionCount']);
+Route::get('/provider/top5acq_trxvolume/{user_id}', ['uses' => 'providerDashboardController@getTop5AcquirerTransactionVolume']);
+Route::get('/provider/top5acq_trxcount/{user_id}', ['uses' => 'providerDashboardController@getTop5AcquirerTransactionCount']);
+Route::get('/provider/top5mer_trxvolume/{user_id}', ['uses' => 'providerDashboardController@getTop5MerchantTransactionVolume']);
+Route::get('/provider/top5mer_trxcount/{user_id}', ['uses' => 'providerDashboardController@getTop5MerchantTransactionCount']);
+Route::get('/provider/top5sto_trxvolume/{user_id}', ['uses' => 'providerDashboardController@getTop5StoreTransactionVolume']);
+Route::get('/provider/top5sto_trxcount/{user_id}', ['uses' => 'providerDashboardController@getTop5StoreTransactionCount']);
+Route::get('/provider/top5ctp_trxvolume/{user_id}', ['uses' => 'providerDashboardController@getTop5CardTypeTransactionVolume']);
+Route::get('/provider/top5ctp_trxcount/{user_id}', ['uses' => 'providerDashboardController@getTop5CardTypeTransactionCount']);
+Route::get('/provider/top5ttp_trxvolume/{user_id}', ['uses' => 'providerDashboardController@getTop5TransactionTypeTransactionVolume']);
+Route::get('/provider/top5ttp_trxcount/{user_id}', ['uses' => 'providerDashboardController@getTop5TransactionTypeTransactionCount']);
+
+Route::get('/acquirer/transaction_volume/{user_id}', ['uses' => 'acquirerDashboardController@getTransactionVolume']);
+Route::get('/acquirer/transaction_count/{user_id}', ['uses' => 'acquirerDashboardController@getTransactionCount']);
+Route::get('/acquirer/top5mer_trxvolume/{user_id}', ['uses' => 'acquirerDashboardController@getTop5MerchantTransactionVolume']);
+Route::get('/acquirer/top5mer_trxcount/{user_id}', ['uses' => 'acquirerDashboardController@getTop5MerchantTransactionCount']);
+Route::get('/acquirer/top5ctp_trxvolume/{user_id}', ['uses' => 'acquirerDashboardController@getTop5CardTypeTransactionVolume']);
+Route::get('/acquirer/top5ctp_trxcount/{user_id}', ['uses' => 'acquirerDashboardController@getTop5CardTypeTransactionCount']);
+Route::get('/acquirer/top5ttp_trxvolume/{user_id}', ['uses' => 'acquirerDashboardController@getTop5TransactionTypeTransactionVolume']);
+Route::get('/acquirer/top5ttp_trxcount/{user_id}', ['uses' => 'acquirerDashboardController@getTop5TransactionTypeTransactionCount']);
+
+Route::get('/corporate/transaction_volume/{user_id}', ['uses' => 'corporateDashboardController@getTransactionVolume']);
+Route::get('/corporate/transaction_count/{user_id}', ['uses' => 'corporateDashboardController@getTransactionCount']);
+Route::get('/corporate/top5acq_trxvolume/{user_id}', ['uses' => 'corporateDashboardController@getTop5AcquirerTransactionVolume']);
+Route::get('/corporate/top5acq_trxcount/{user_id}', ['uses' => 'corporateDashboardController@getTop5AcquirerTransactionCount']);
+Route::get('/corporate/top5mer_trxvolume/{user_id}', ['uses' => 'corporateDashboardController@getTop5MerchantTransactionVolume']);
+Route::get('/corporate/top5mer_trxcount/{user_id}', ['uses' => 'corporateDashboardController@getTop5MerchantTransactionCount']);
+Route::get('/corporate/top5ctp_trxvolume/{user_id}', ['uses' => 'corporateDashboardController@getTop5CardTypeTransactionVolume']);
+Route::get('/corporate/top5ctp_trxcount/{user_id}', ['uses' => 'corporateDashboardController@getTop5CardTypeTransactionCount']);
+Route::get('/corporate/top5ttp_trxvolume/{user_id}', ['uses' => 'corporateDashboardController@getTop5TransactionTypeTransactionVolume']);
+Route::get('/corporate/top5ttp_trxcount/{user_id}', ['uses' => 'corporateDashboardController@getTop5TransactionTypeTransactionCount']);
+
+Route::get('/branch/transaction_volume/{user_id}', ['uses' => 'branchDashboardController@getTransactionVolume']);
+Route::get('/branch/transaction_count/{user_id}', ['uses' => 'branchDashboardController@getTransactionCount']);
+Route::get('/branch/top5acq_trxvolume/{user_id}', ['uses' => 'branchDashboardController@getTop5AcquirerTransactionVolume']);
+Route::get('/branch/top5acq_trxcount/{user_id}', ['uses' => 'branchDashboardController@getTop5AcquirerTransactionCount']);
+Route::get('/branch/top5sto_trxvolume/{user_id}', ['uses' => 'branchDashboardController@getTop5StoreTransactionVolume']);
+Route::get('/branch/top5sto_trxcount/{user_id}', ['uses' => 'branchDashboardController@getTop5StoreTransactionCount']);
+Route::get('/branch/top5ctp_trxvolume/{user_id}', ['uses' => 'branchDashboardController@getTop5CardTypeTransactionVolume']);
+Route::get('/branch/top5ctp_trxcount/{user_id}', ['uses' => 'branchDashboardController@getTop5CardTypeTransactionCount']);
+Route::get('/branch/top5ttp_trxvolume/{user_id}', ['uses' => 'branchDashboardController@getTop5TransactionTypeTransactionVolume']);
+Route::get('/branch/top5ttp_trxcount/{user_id}', ['uses' => 'branchDashboardController@getTop5TransactionTypeTransactionCount']);
+
+Route::get('/store/transaction_volume/{user_id}', ['uses' => 'storeDashboardController@getTransactionVolume']);
+Route::get('/store/transaction_count/{user_id}', ['uses' => 'storeDashboardController@getTransactionCount']);
+Route::get('/store/top5acq_trxvolume/{user_id}', ['uses' => 'storeDashboardController@getTop5AcquirerTransactionVolume']);
+Route::get('/store/top5acq_trxcount/{user_id}', ['uses' => 'storeDashboardController@getTop5AcquirerTransactionCount']);
+Route::get('/store/top5ctp_trxvolume/{user_id}', ['uses' => 'storeDashboardController@getTop5CardTypeTransactionVolume']);
+Route::get('/store/top5ctp_trxcount/{user_id}', ['uses' => 'storeDashboardController@getTop5CardTypeTransactionCount']);
+Route::get('/store/top5ttp_trxvolume/{user_id}', ['uses' => 'storeDashboardController@getTop5TransactionTypeTransactionVolume']);
+Route::get('/store/top5ttp_trxcount/{user_id}', ['uses' => 'storeDashboardController@getTop5TransactionTypeTransactionCount']);
 
 
 /* Change Password */
