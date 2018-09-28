@@ -19,6 +19,7 @@ class searchTransactionController extends Controller
 
     public function search(Request $request) {
 
+      $username = $request->username;
       $storeCode = $request->store_code;
       $branchCode = $request->branch_code;
       $bankCode = $request->host;
@@ -46,7 +47,8 @@ class searchTransactionController extends Controller
 			//$corporate = $request->corporate;
 			//$merchant = $request->merchant;
 
-			$data = DB::select("[spVDWH_FilterTrx2] '$storeCode','$branchCode','$bankCode','$trxType','$prepaidCardNum','$apprCode','$mid','$tid','$startDate','$endDate'");
+			//$data = DB::select("[spVDWH_FilterTrx2] '$storeCode','$branchCode','$bankCode','$trxType','$prepaidCardNum','$apprCode','$mid','$tid','$startDate','$endDate'");
+      $data = DB::select("[spVDWH_FilterTrxWithPrivilege] '$username','$storeCode','$branchCode','$bankCode','$trxType','$prepaidCardNum','$apprCode','$mid','$tid','$startDate','$endDate'");
 
       $data = json_encode($data);
       $data = json_decode($data, true);
