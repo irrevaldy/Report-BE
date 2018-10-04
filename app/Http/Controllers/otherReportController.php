@@ -155,7 +155,14 @@ class otherReportController extends Controller
     	$data = json_encode($data);
     	$data = json_decode($data, true);
 
-      $merchant = $data[0]['value'];
+      $merchant = array();
+      $merchant[0] = 'AllMerchant';
+      for($a = 0; $a < count($data); $a++)
+      {
+        $merchant[$a+1] = $data[$a]['value'];
+      }
+
+      //$merchant = $data[0]['value'];
 
       $dir = "C://generate/";
       $extFile = ".csv";
@@ -212,7 +219,7 @@ class otherReportController extends Controller
           //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
           $fullPath = $dir.$value;
 
-          if (file_exists($fullPath) && $reportType == 'DetailReportByHost' && $partValue[3] == $merchant)
+          if (file_exists($fullPath) && $reportType == 'DetailReportByHost' && in_array($partValue[3], $merchant))
           {
             $goodi['number'] = $num;
             $goodi['val'] = $value;
@@ -238,6 +245,7 @@ class otherReportController extends Controller
       }
 
       $res['success'] = true;
+      $res['merchant_list'] = $merchant;
       $res['total'] = count($a);
       $res['result'] = $arrgoodi;
 
@@ -267,7 +275,12 @@ class otherReportController extends Controller
     	$data = json_encode($data);
     	$data = json_decode($data, true);
 
-      $merchant = $data[0]['value'];
+      $merchant = array();
+      $merchant[0] = 'AllMerchant';
+      for($a = 0; $a < count($data); $a++)
+      {
+        $merchant[$a+1] = $data[$a]['value'];
+      }
 
       $arrselected = array();
       $countas = 0;
@@ -360,16 +373,19 @@ class otherReportController extends Controller
                 $expDate = explode('/', $date);
                     //$dateFormat = date('Ymd', strtotime($date));
                 $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'DetailReportByHost_'.$dateFile."_".$branch."_".$merchant;
-                //$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+				foreach($merchant as $key => $value)
+				{
+					$filename = 'DetailReportByHost_'.$dateFile."_".$branch."_".$value;
+					//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
 
-                $fullFileName = $filename.$extFile;
-                $fullPath = $dir.$filename.$extFile;
+					$fullFileName = $filename.$extFile;
+					$fullPath = $dir.$filename.$extFile;
 
-                if (file_exists($fullPath))
-                {
-                  array_push($files, $fullFileName);
-                }
+					if (file_exists($fullPath))
+					{
+					  array_push($files, $fullFileName);
+					}
+				}
 
                 break;
 
@@ -390,18 +406,20 @@ class otherReportController extends Controller
                 $last_date  = date('Ymt', strtotime($first_date));
 
                 //for($i=$first_date; $i<=20170621; $i++) {
-                for($i=$first_date; $i<=$last_date; $i++) {
+                for($i=$first_date; $i<=$last_date; $i++)
+				{
+					foreach($merchant as $key => $value)
+					{
+						$filename = 'DetailReportByHost_'.$i.'_'.$branch."_".$value;
+						//$filename = 'ReconsiliationReport_'.$i.'_'.$username;
+						$fullFileName = $filename.$extFile;
+						$fullPath = $dir.$filename.$extFile;
 
-                    $filename = 'DetailReportByHost_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
+						if (file_exists($fullPath))
+						{
+						  array_push($files, $fullFileName);
+						}
+					}
                 }
 
                 break;
@@ -416,18 +434,20 @@ class otherReportController extends Controller
                 $eDate = $eDate[2].$eDate[1].$eDate[0];
                 //$filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$branch;
 
-                for($i=$eDate; $i<=$sDate; $i++) {
+                for($i=$eDate; $i<=$sDate; $i++)
+				{
+					foreach($merchant as $key => $value)
+					{
+						$filename = 'DetailReportByHost_'.$i.'_'.$branch."_".$value;
+						//$filename = 'ReconsiliationReport_'.$i.'_'.$username;
+						$fullFileName = $filename.$extFile;
+						$fullPath = $dir.$filename.$extFile;
 
-                    $filename = 'DetailReportByHost_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
+						if (file_exists($fullPath))
+						{
+						  array_push($files, $fullFileName);
+						}
+					}
                 }
 
                 break;
@@ -570,7 +590,14 @@ class otherReportController extends Controller
       $data = json_encode($data);
       $data = json_decode($data, true);
 
-      $merchant = $data[0]['value'];
+      //$merchant = $data[0]['value'];
+
+      $merchant = array();
+      $merchant[0] = 'AllMerchant';
+      for($a = 0; $a < count($data); $a++)
+      {
+        $merchant[$a+1] = $data[$a]['value'];
+      }
 
       $dir = "C://generate/";
       $extFile = ".csv";
@@ -626,7 +653,7 @@ class otherReportController extends Controller
           //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
           $fullPath = $dir.$value;
 
-          if (file_exists($fullPath) && $reportType == 'ReconsiliationReport' && $partValue[3] == $merchant)
+          if (file_exists($fullPath) && $reportType == 'ReconsiliationReport' && in_array($partValue[3], $merchant))
           {
             $goodi['number'] = $num;
             $goodi['val'] = $value;
@@ -652,6 +679,7 @@ class otherReportController extends Controller
       }
 
       $res['success'] = true;
+      $res['merchant_list'] = $merchant;
       $res['total'] = count($a);
       $res['result'] = $arrgoodi;
 
@@ -681,7 +709,12 @@ class otherReportController extends Controller
     	$data = json_encode($data);
     	$data = json_decode($data, true);
 
-      $merchant = $data[0]['value'];
+      $merchant = array();
+      $merchant[0] = 'AllMerchant';
+      for($a = 0; $a < count($data); $a++)
+      {
+        $merchant[$a+1] = $data[$a]['value'];
+      }
 
       $arrselected = array();
       $countas = 0;
@@ -774,17 +807,20 @@ class otherReportController extends Controller
                 $expDate = explode('/', $date);
                     //$dateFormat = date('Ymd', strtotime($date));
                 $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'ReconsiliationReport_'.$dateFile."_".$branch."_".$merchant;
-                //$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
 
-                $fullFileName = $filename.$extFile;
-                $fullPath = $dir.$filename.$extFile;
+				foreach($merchant as $key => $value)
+				{
+					$filename = 'ReconsiliationReport_'.$dateFile."_".$branch."_".$value;
+					//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
 
-                if (file_exists($fullPath))
-                {
-                  array_push($files, $fullFileName);
-                }
+					$fullFileName = $filename.$extFile;
+					$fullPath = $dir.$filename.$extFile;
 
+					if (file_exists($fullPath))
+					{
+					  array_push($files, $fullFileName);
+					}
+				}
                 break;
 
              case 'm':
@@ -805,17 +841,19 @@ class otherReportController extends Controller
 
                 //for($i=$first_date; $i<=20170621; $i++) {
                 for($i=$first_date; $i<=$last_date; $i++) {
+					foreach($merchant as $key => $value)
+					{
+						$filename = 'ReconsiliationReport_'.$i.'_'.$branch."_".$value;
+						//$filename = 'ReconsiliationReport_'.$i.'_'.$username;
+						$fullFileName = $filename.$extFile;
+						$fullPath = $dir.$filename.$extFile;
 
-                    $filename = 'ReconsiliationReport_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
+						if (file_exists($fullPath))
+						{
+						  array_push($files, $fullFileName);
+						}
 
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
+					}
                 }
 
                 break;
@@ -831,17 +869,18 @@ class otherReportController extends Controller
                 $filename = 'ReconsiliationReport_'.$eDate.'_'.$sDate."_".$branch;
 
                 for($i=$eDate; $i<=$sDate; $i++) {
+					foreach($merchant as $key => $value)
+					{
+						$filename = 'ReconsiliationReport_'.$i.'_'.$branch."_".$value;
+						//$filename = 'ReconsiliationReport_'.$i.'_'.$username;
+						$fullFileName = $filename.$extFile;
+						$fullPath = $dir.$filename.$extFile;
 
-                    $filename = 'ReconsiliationReport_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
+						if (file_exists($fullPath))
+						{
+						  array_push($files, $fullFileName);
+						}
+					}
                 }
 
                 break;
@@ -906,7 +945,840 @@ class otherReportController extends Controller
     }
   }
 
-  public function listDetailReportAcquirer(Request $request)
+  public function listDetailReportBranch(Request $request)
+  {
+    try
+    {
+      // $username = 'merchant1';
+      // $branch = '6789';
+      // $merchant = '1';
+
+      $username = $request->username;
+      //$merchant = "1";
+
+      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
+
+      $data = json_encode($data);
+      $data = json_decode($data, true);
+
+	  $datas = DB::select("[spVMonitoringReport_GetUserInfo] '$username'");
+
+      $datas = json_encode($datas);
+      $datas = json_decode($datas, true);
+
+      //$merchant = $datas[0]['value'];
+	  $merchant = array();
+	  for($a = 0; $a < count($datas); $a++)
+      {
+        $merchant[$a] = $datas[$a]['value'];
+      }
+
+      $branch = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $branch[$a] = $data[$a]['branch_code'];
+      }
+
+      //$branch = $data[0]['branch_code'];
+
+      $dir = "C://generate/";
+      $extFile = ".csv";
+
+      // Sort in ascending order - this is default
+      //$a = scandir($dir);
+
+      $a = array_diff(scandir($dir), array('.', '..'));
+      $num = 0;
+      $arrgoodi = array();
+
+      foreach($a as $key => $value)
+      {
+        $partingExt = explode('.', $value);
+        $partValue = explode('_', $partingExt[0]);
+        $reportType = $partValue[0];
+        $totalPart = count($partValue);
+
+        if($totalPart == 3)
+        {
+          //$reportType = $partValue[0];
+          //$date = $partValue[1];
+          //$username = $partValue[2];
+
+          $filename = $partValue[0]."_".$partValue[1]."_".$username.$extFile;
+          $fullPath = $dir.$value;
+
+          if (file_exists($fullPath) && $reportType == 'DetailReportByHost' && $partValue[2] == $username)
+          {
+            $goodi['number'] = $num;
+            $goodi['val'] = $value;
+            //$filename = $dir.$value;
+            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
+
+            $filemtime = filemtime($fullPath);
+            $filemtimez = strtotime("+420 minutes", $filemtime);
+
+            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+            $size = filesize($fullPath);
+
+            $decimals = 2;
+            $sz = 'BKMGTP';
+            $factor = floor((strlen($size) - 1) / 3);
+            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
+
+            $goodi['size'] = $human_filesize."B";
+            $arrgoodi[$num] = $goodi;
+            $num++;
+            $filename = "";
+          }
+        }
+        else if($totalPart == 4)
+        {
+          //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
+          $fullPath = $dir.$value;
+
+          if (file_exists($fullPath) && $reportType == 'DetailReportByHost' && in_array($partValue[2], $branch) && in_array($partValue[3], $merchant))
+          {
+            $goodi['number'] = $num;
+            $goodi['val'] = $value;
+            //$filename = $dir.$value;
+            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
+            $filemtime = filemtime($fullPath);
+            $filemtimez = strtotime("+420 minutes", $filemtime);
+
+            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+            $size = filesize($fullPath);
+
+            $decimals = 2;
+            $sz = 'BKMGTP';
+            $factor = floor((strlen($size) - 1) / 3);
+            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
+
+            $goodi['size'] = $human_filesize."B";
+            $arrgoodi[$num] = $goodi;
+            $num++;
+            $filename = "";
+          }
+        }
+      }
+
+      $res['success'] = true;
+      $res['merchant'] = $merchant;
+      $res['branch'] = $branch;
+      $res['total'] = count($a);
+      $res['result'] = $arrgoodi;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+  public function listDetailReportFilteredBranch(Request $request)
+  {
+    try
+    {
+	    $range = $request->range;
+      $date = $request->date;
+      $username = $request->username;
+
+      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
+
+      $data = json_encode($data);
+      $data = json_decode($data, true);
+
+	    $datas = DB::select("[spVMonitoringReport_GetUserInfo] '$username'");
+
+      $datas = json_encode($datas);
+      $datas = json_decode($datas, true);
+
+      //$merchant = $datas[0]['value'];
+  	  $merchant = array();
+  	  for($a = 0; $a < count($datas); $a++)
+      {
+        $merchant[$a] = $datas[$a]['value'];
+      }
+
+      $branch = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $branch[$a] = $data[$a]['branch_code'];
+      }
+
+      //$branch = $data[0]['branch_code'];
+
+	  $arrselected = array();
+      $countas = 0;
+
+      if($branch == 'All Branch')
+      {
+        $branch = 'AllBranch';
+      }
+      $now = date("YmdHis");
+
+      $dir = "C://generate/";
+      $extFile = ".csv";
+
+      if(strlen($date) == 7)
+      {
+          $date = '01/'.$date;
+      }
+
+      $expDate = explode('/', $date);
+      //$dateFormat = date('Ymd', strtotime($date));
+      $dateFormat = $expDate[2].$expDate[1].$expDate[0];
+
+      if($range == 'w' )
+      {
+          $endPoint = date('Ymd', strtotime('-7 days '.$dateFormat));
+      }
+      else
+      {
+          $endPoint = $dateFormat;
+      }
+      //belum selesai
+
+      if($branch == '')
+      {
+        switch ($range)
+        {
+            case 'd':
+
+                $expDate = explode('/', $date);
+                //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1].$expDate[0];
+                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
+                break;
+             case 'm':
+
+                $expDate = explode('/', $date);
+                //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1];
+                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
+                break;
+            case 'w':
+                $dateN = date('d/m/Y', strtotime('-7 days '.$dateFormat));
+
+                $sDate = explode('/', $date);
+                $sDate = $sDate[2].$sDate[1].$sDate[0];
+
+                $eDate = explode('/', $dateN);
+                $eDate = $eDate[2].$eDate[1].$eDate[0];
+                $filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$username;
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+        //$sp = "[spPortal_GenerateReportByBank_CMD] '$code', '$branch', '$dateFormat', '$range', '$endPoint', '$merchId', '$filename'";
+
+        $fullFileName = $filename.$extFile;
+        $fullPath = $dir.$filename.$extFile;
+
+        if (file_exists($fullPath))
+        {
+            $arrselected[$countas] = $fullFileName;
+            $countas++;
+        }
+      }
+      else if ($branch != '')
+      {
+        $files = array();
+
+        switch ($range) {
+            case 'd':
+
+                $info = "(1 day report, ".$date.")";
+
+                $start = $dateFormat;
+                $end = $start;
+
+                $expDate = explode('/', $date);
+                    //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1].$expDate[0];
+				foreach($merchant as $key => $value)
+				{
+					$merchantm = $value;
+					foreach($branch as $key => $value)
+					{
+						$branchb = $value;
+
+						$filename = 'DetailReportByHost_'.$dateFile."_".$branchb."_".$merchantm;
+						//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+						$fullFileName = $filename.$extFile;
+						$fullPath = $dir.$filename.$extFile;
+
+						if (file_exists($fullPath))
+						{
+						  array_push($files, $fullFileName);
+						}
+					}
+				}
+
+                break;
+
+             case 'm':
+
+                $info = "(1 month report, ".substr($date, 3).")";
+
+                $start = date('Ym', strtotime($dateFormat));
+                $end = $start;
+
+                $expDate = explode('/', $date);
+                    //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1];
+                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
+
+                $first_date = '01-'.$expDate[1].'-'.$expDate[2];
+                $first_date = date('Ym01', strtotime($first_date));
+                $last_date  = date('Ymt', strtotime($first_date));
+
+                //for($i=$first_date; $i<=20170621; $i++) {
+                for($i=$first_date; $i<=$last_date; $i++)
+				{
+					foreach($merchant as $key => $value)
+					{
+						$merchantm = $value;
+						foreach($branch as $key => $value)
+						{
+							$branchb = $value;
+
+							$filename = 'DetailReportByHost_'.$i."_".$branchb."_".$merchantm;
+							//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+							$fullFileName = $filename.$extFile;
+							$fullPath = $dir.$filename.$extFile;
+
+							if (file_exists($fullPath))
+							{
+							  array_push($files, $fullFileName);
+							}
+						}
+
+					}
+                }
+
+                break;
+
+            case 'w':
+                $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
+
+                $sDate = explode('/', $date);
+                $sDate = $sDate[2].$sDate[1].$sDate[0];
+
+                $eDate = explode('/', $dateN);
+                $eDate = $eDate[2].$eDate[1].$eDate[0];
+                //$filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$branch;
+
+                for($i=$eDate; $i<=$sDate; $i++)
+				{
+					foreach($merchant as $key => $value)
+					{
+						$merchantm = $value;
+						foreach($branch as $key => $value)
+						{
+							$branchb = $value;
+
+							$filename = 'DetailReportByHost_'.$i."_".$branchb."_".$merchantm;
+							//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+							$fullFileName = $filename.$extFile;
+							$fullPath = $dir.$filename.$extFile;
+
+							if (file_exists($fullPath))
+							{
+							  array_push($files, $fullFileName);
+							}
+						}
+					}
+                }
+
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        $arrselected = $files;
+      }
+
+      // Sort in ascending order - this is default
+      //$a = scandir($dir);
+
+      $a = array_diff(scandir($dir), array('.', '..'));
+      $b = array_diff(scandir($dir), $arrselected);
+      $num = 0;
+      $arrgoodi = array();
+
+      foreach($arrselected as $key => $value)
+      {
+        $partValue = explode('_', $value);
+        $reportType = $partValue[0];
+
+        $goodi['number'] = $num;
+        $goodi['val'] = $value;
+        $filename = $dir.$value;
+        //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
+        $filemtime = filemtime($filename);
+        $filemtimez = strtotime("+420 minutes", $filemtime);
+
+        $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+
+        $size = filesize($filename);
+
+        $decimals = 2;
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($size) - 1) / 3);
+        $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
+
+        $goodi['size'] = $human_filesize."B";
+        if($reportType == 'DetailReportByHost')
+        {
+          $arrgoodi[$num] = $goodi;
+        }
+        $num++;
+        $filename = "";
+
+      }
+
+      $res['success'] = true;
+      $res['total'] = count($a);
+      $res['result'] = $arrgoodi;
+
+      return response($res);
+
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+  public function listReconReportBranch(Request $request)
+  {
+    try
+    {
+      // $username = 'merchant1';
+      // $branch = '6789';
+      // $merchant = '1';
+
+      $username = $request->username;
+      //$merchant = "1";
+
+      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
+
+      $data = json_encode($data);
+      $data = json_decode($data, true);
+
+	  $datas = DB::select("[spVMonitoringReport_GetUserInfo] '$username'");
+
+      $datas = json_encode($datas);
+      $datas = json_decode($datas, true);
+
+	  $merchant = array();
+	  for($a = 0; $a < count($datas); $a++)
+      {
+        $merchant[$a] = $datas[$a]['value'];
+      }
+      //$merchant = $datas[0]['value'];
+
+      $branch = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $branch[$a] = $data[$a]['branch_code'];
+      }
+
+      $dir = "C://generate/";
+      $extFile = ".csv";
+
+      // Sort in ascending order - this is default
+      //$a = scandir($dir);
+
+      $a = array_diff(scandir($dir), array('.', '..'));
+      $num = 0;
+      $arrgoodi = array();
+
+      foreach($a as $key => $value)
+      {
+        $partingExt = explode('.', $value);
+        $partValue = explode('_', $partingExt[0]);
+        $reportType = $partValue[0];
+        $totalPart = count($partValue);
+
+        if($totalPart == 3)
+        {
+          //$reportType = $partValue[0];
+          //$date = $partValue[1];
+          //$username = $partValue[2];
+
+          $filename = $partValue[0]."_".$partValue[1]."_".$username.$extFile;
+          $fullPath = $dir.$value;
+
+          if (file_exists($fullPath) && $reportType == 'ReconsiliationReport' && $partValue[2] == $username)
+          {
+            $goodi['number'] = $num;
+            $goodi['val'] = $value;
+            //$filename = $dir.$value;
+            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
+
+            $filemtime = filemtime($fullPath);
+            $filemtimez = strtotime("+420 minutes", $filemtime);
+
+            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+            $size = filesize($fullPath);
+
+            $decimals = 2;
+            $sz = 'BKMGTP';
+            $factor = floor((strlen($size) - 1) / 3);
+            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
+
+            $goodi['size'] = $human_filesize."B";
+            $arrgoodi[$num] = $goodi;
+            $num++;
+            $filename = "";
+          }
+        }
+        else if($totalPart == 4)
+        {
+          //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
+          $fullPath = $dir.$value;
+
+          if (file_exists($fullPath) && $reportType == 'ReconsiliationReport' && in_array($partValue[2], $branch) && in_array($partValue[3], $merchant))
+          {
+            $goodi['number'] = $num;
+            $goodi['val'] = $value;
+            //$filename = $dir.$value;
+            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
+            $filemtime = filemtime($fullPath);
+            $filemtimez = strtotime("+420 minutes", $filemtime);
+
+            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+            $size = filesize($fullPath);
+
+            $decimals = 2;
+            $sz = 'BKMGTP';
+            $factor = floor((strlen($size) - 1) / 3);
+            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
+
+            $goodi['size'] = $human_filesize."B";
+            $arrgoodi[$num] = $goodi;
+            $num++;
+            $filename = "";
+          }
+        }
+      }
+
+      $res['success'] = true;
+      $res['branch'] = $branch;
+      $res['total'] = count($a);
+      $res['result'] = $arrgoodi;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+  public function listReconReportFilteredBranch(Request $request)
+  {
+    try
+    {
+		 $range = $request->range;
+      $date = $request->date;
+      $username = $request->username;
+
+      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
+
+      $data = json_encode($data);
+      $data = json_decode($data, true);
+
+	    $datas = DB::select("[spVMonitoringReport_GetUserInfo] '$username'");
+
+      $datas = json_encode($datas);
+      $datas = json_decode($datas, true);
+
+      //$merchant = $datas[0]['value'];
+  	  $merchant = array();
+  	  for($a = 0; $a < count($datas); $a++)
+      {
+        $merchant[$a] = $datas[$a]['value'];
+      }
+
+      $branch = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $branch[$a] = $data[$a]['branch_code'];
+      }
+
+	  $arrselected = array();
+      $countas = 0;
+
+      if($branch == 'All Branch')
+      {
+        $branch = 'AllBranch';
+      }
+      $now = date("YmdHis");
+
+      $dir = "C://generate/";
+      $extFile = ".csv";
+
+      if(strlen($date) == 7)
+      {
+          $date = '01/'.$date;
+      }
+
+      $expDate = explode('/', $date);
+      //$dateFormat = date('Ymd', strtotime($date));
+      $dateFormat = $expDate[2].$expDate[1].$expDate[0];
+
+      if($range == 'w' )
+      {
+          $endPoint = date('Ymd', strtotime('-7 days '.$dateFormat));
+      }
+      else
+      {
+          $endPoint = $dateFormat;
+      }
+      //belum selesai
+
+      if($branch == '')
+      {
+        switch ($range)
+        {
+            case 'd':
+
+                $expDate = explode('/', $date);
+                //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1].$expDate[0];
+                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
+                break;
+             case 'm':
+
+                $expDate = explode('/', $date);
+                //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1];
+                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
+                break;
+            case 'w':
+                $dateN = date('d/m/Y', strtotime('-7 days '.$dateFormat));
+
+                $sDate = explode('/', $date);
+                $sDate = $sDate[2].$sDate[1].$sDate[0];
+
+                $eDate = explode('/', $dateN);
+                $eDate = $eDate[2].$eDate[1].$eDate[0];
+                $filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$username;
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+        //$sp = "[spPortal_GenerateReportByBank_CMD] '$code', '$branch', '$dateFormat', '$range', '$endPoint', '$merchId', '$filename'";
+
+        $fullFileName = $filename.$extFile;
+        $fullPath = $dir.$filename.$extFile;
+
+        if (file_exists($fullPath))
+        {
+            $arrselected[$countas] = $fullFileName;
+            $countas++;
+        }
+      }
+      else if ($branch != '')
+      {
+        $files = array();
+
+        switch ($range) {
+            case 'd':
+
+                $info = "(1 day report, ".$date.")";
+
+                $start = $dateFormat;
+                $end = $start;
+
+                $expDate = explode('/', $date);
+                    //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1].$expDate[0];
+				foreach($merchant as $key => $value)
+				{
+					$merchantm = $value;
+					foreach($branch as $key => $value)
+					{
+						$branchb = $value;
+
+						$filename = 'ReconsiliationReport_'.$dateFile."_".$branchb."_".$merchantm;
+						//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+						$fullFileName = $filename.$extFile;
+						$fullPath = $dir.$filename.$extFile;
+
+						if (file_exists($fullPath))
+						{
+						  array_push($files, $fullFileName);
+						}
+					}
+				}
+
+                break;
+
+             case 'm':
+
+                $info = "(1 month report, ".substr($date, 3).")";
+
+                $start = date('Ym', strtotime($dateFormat));
+                $end = $start;
+
+                $expDate = explode('/', $date);
+                    //$dateFormat = date('Ymd', strtotime($date));
+                $dateFile = $expDate[2].$expDate[1];
+                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
+
+                $first_date = '01-'.$expDate[1].'-'.$expDate[2];
+                $first_date = date('Ym01', strtotime($first_date));
+                $last_date  = date('Ymt', strtotime($first_date));
+
+                //for($i=$first_date; $i<=20170621; $i++) {
+                for($i=$first_date; $i<=$last_date; $i++)
+				{
+					foreach($merchant as $key => $value)
+					{
+						$merchantm = $value;
+						foreach($branch as $key => $value)
+						{
+							$branchb = $value;
+
+							$filename = 'ReconsiliationReport_'.$i."_".$branchb."_".$merchantm;
+							//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+							$fullFileName = $filename.$extFile;
+							$fullPath = $dir.$filename.$extFile;
+
+							if (file_exists($fullPath))
+							{
+							  array_push($files, $fullFileName);
+							}
+						}
+
+					}
+                }
+
+                break;
+
+            case 'w':
+                $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
+
+                $sDate = explode('/', $date);
+                $sDate = $sDate[2].$sDate[1].$sDate[0];
+
+                $eDate = explode('/', $dateN);
+                $eDate = $eDate[2].$eDate[1].$eDate[0];
+                //$filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$branch;
+
+                for($i=$eDate; $i<=$sDate; $i++)
+				{
+					foreach($merchant as $key => $value)
+					{
+						$merchantm = $value;
+						foreach($branch as $key => $value)
+						{
+							$branchb = $value;
+
+							$filename = 'ReconsiliationReport_'.$i."_".$branchb."_".$merchantm;
+							//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+							$fullFileName = $filename.$extFile;
+							$fullPath = $dir.$filename.$extFile;
+
+							if (file_exists($fullPath))
+							{
+							  array_push($files, $fullFileName);
+							}
+						}
+					}
+                }
+
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        $arrselected = $files;
+      }
+
+      // Sort in ascending order - this is default
+      //$a = scandir($dir);
+
+      $a = array_diff(scandir($dir), array('.', '..'));
+      $b = array_diff(scandir($dir), $arrselected);
+      $num = 0;
+      $arrgoodi = array();
+
+      foreach($arrselected as $key => $value)
+      {
+        $partValue = explode('_', $value);
+        $reportType = $partValue[0];
+
+        $goodi['number'] = $num;
+        $goodi['val'] = $value;
+        $filename = $dir.$value;
+        //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
+        $filemtime = filemtime($filename);
+        $filemtimez = strtotime("+420 minutes", $filemtime);
+
+        $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+
+        $size = filesize($filename);
+
+        $decimals = 2;
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($size) - 1) / 3);
+        $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
+
+        $goodi['size'] = $human_filesize."B";
+        if($reportType == 'ReconsiliationReport')
+        {
+          $arrgoodi[$num] = $goodi;
+        }
+        $num++;
+        $filename = "";
+
+      }
+
+      $res['success'] = true;
+      $res['total'] = count($a);
+      $res['result'] = $arrgoodi;
+
+      return response($res);
+
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+public function listDetailReportAcquirer(Request $request)
   {
     try
     {
@@ -922,7 +1794,13 @@ class otherReportController extends Controller
     	$data = json_encode($data);
     	$data = json_decode($data, true);
 
-      $acquirer = $data[0]['FNAME'];
+      $acquirer = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $acquirer[$a] = $data[$a]['FNAME'];
+      }
+
+      //$acquirer = $data[0]['FNAME'];
 
       $dir = "C://generate/";
       $extFile = ".csv";
@@ -979,7 +1857,7 @@ class otherReportController extends Controller
           //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
           $fullPath = $dir.$value;
 
-          if (file_exists($fullPath) && $reportType == 'AcquirerDetailReport' && $partValue[3] == $acquirer)
+          if (file_exists($fullPath) && $reportType == 'AcquirerDetailReport' && in_array($partValue[3], $acquirer))
           {
             $goodi['number'] = $num;
             $goodi['val'] = $value;
@@ -1005,6 +1883,7 @@ class otherReportController extends Controller
       }
 
       $res['success'] = true;
+      $res['acquirer_list'] = $acquirer;
       $res['total'] = count($a);
       $res['result'] = $arrgoodi;
 
@@ -1245,6 +2124,7 @@ class otherReportController extends Controller
       }
 
       $res['success'] = true;
+
       $res['total'] = count($a);
       $res['result'] = $arrgoodi;
 
@@ -1275,7 +2155,13 @@ class otherReportController extends Controller
     	$data = json_encode($data);
     	$data = json_decode($data, true);
 
-      $acquirer = $data[0]['FNAME'];
+      $acquirer = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $acquirer[$a] = $data[$a]['FNAME'];
+      }
+
+      //$acquirer = $data[0]['FNAME'];
 
       $dir = "C://generate/";
       $extFile = ".csv";
@@ -1332,7 +2218,7 @@ class otherReportController extends Controller
           //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
           $fullPath = $dir.$value;
 
-          if (file_exists($fullPath) && $reportType == 'AcquirerReconsiliationReport' && $partValue[3] == $acquirer)
+          if (file_exists($fullPath) && $reportType == 'AcquirerReconsiliationReport' && in_array($partValue[3], $acquirer))
           {
             $goodi['number'] = $num;
             $goodi['val'] = $value;
@@ -1358,6 +2244,7 @@ class otherReportController extends Controller
       }
 
       $res['success'] = true;
+      $res['acquirer_list'] = $acquirer;
       $res['total'] = count($a);
       $res['result'] = $arrgoodi;
 
@@ -1611,717 +2498,5 @@ class otherReportController extends Controller
       return response($res);
     }
   }
-
-  public function listDetailReportBranch(Request $request)
-  {
-    try
-    {
-      // $username = 'merchant1';
-      // $branch = '6789';
-      // $merchant = '1';
-
-      $username = $request->username;
-      //$merchant = "1";
-
-      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
-
-      $data = json_encode($data);
-      $data = json_decode($data, true);
-
-      $branch = $data[0]['branch_code'];
-
-      $dir = "C://generate/";
-      $extFile = ".csv";
-
-      // Sort in ascending order - this is default
-      //$a = scandir($dir);
-
-      $a = array_diff(scandir($dir), array('.', '..'));
-      $num = 0;
-      $arrgoodi = array();
-
-      foreach($a as $key => $value)
-      {
-        $partingExt = explode('.', $value);
-        $partValue = explode('_', $partingExt[0]);
-        $reportType = $partValue[0];
-        $totalPart = count($partValue);
-
-        if($totalPart == 3)
-        {
-          //$reportType = $partValue[0];
-          //$date = $partValue[1];
-          //$username = $partValue[2];
-
-          $filename = $partValue[0]."_".$partValue[1]."_".$username.$extFile;
-          $fullPath = $dir.$value;
-
-          if (file_exists($fullPath) && $reportType == 'DetailReportByHost' && $partValue[2] == $username)
-          {
-            $goodi['number'] = $num;
-            $goodi['val'] = $value;
-            //$filename = $dir.$value;
-            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-
-            $filemtime = filemtime($fullPath);
-            $filemtimez = strtotime("+420 minutes", $filemtime);
-
-            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
-            $size = filesize($fullPath);
-
-            $decimals = 2;
-            $sz = 'BKMGTP';
-            $factor = floor((strlen($size) - 1) / 3);
-            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
-
-            $goodi['size'] = $human_filesize."B";
-            $arrgoodi[$num] = $goodi;
-            $num++;
-            $filename = "";
-          }
-        }
-        else if($totalPart == 4)
-        {
-          //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
-          $fullPath = $dir.$value;
-
-          if (file_exists($fullPath) && $reportType == 'DetailReportByHost' && $partValue[2] == $branch)
-          {
-            $goodi['number'] = $num;
-            $goodi['val'] = $value;
-            //$filename = $dir.$value;
-            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-            $filemtime = filemtime($fullPath);
-            $filemtimez = strtotime("+420 minutes", $filemtime);
-
-            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
-            $size = filesize($fullPath);
-
-            $decimals = 2;
-            $sz = 'BKMGTP';
-            $factor = floor((strlen($size) - 1) / 3);
-            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
-
-            $goodi['size'] = $human_filesize."B";
-            $arrgoodi[$num] = $goodi;
-            $num++;
-            $filename = "";
-          }
-        }
-      }
-
-      $res['success'] = true;
-      $res['total'] = count($a);
-      $res['result'] = $arrgoodi;
-
-      return response($res);
-    }
-    catch(QueryException $ex)
-    {
-      $res['success'] = false;
-      $res['result'] = 'Query Exception.. Please Check Database!';
-
-      return response($res);
-    }
-  }
-
-  public function listDetailReportFilteredBranch(Request $request)
-  {
-    try
-    {
-
-      $range = $request->range;
-      $date = $request->date;
-      $username = $request->username;
-      //$merchant = "1";
-
-      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
-
-      $data = json_encode($data);
-      $data = json_decode($data, true);
-
-      $branch = $data[0]['branch_code'];
-      $merchant = $data[0]['merch_id'];
-
-      $arrselected = array();
-      $countas = 0;
-
-      /*if($branch == 'All Branch')
-      {
-        $branch = '';
-      }*/
-      $now = date("YmdHis");
-
-      $dir = "C://generate/";
-      $extFile = ".csv";
-
-      if(strlen($date) == 7)
-      {
-          $date = '01/'.$date;
-      }
-
-      $expDate = explode('/', $date);
-      //$dateFormat = date('Ymd', strtotime($date));
-      $dateFormat = $expDate[2].$expDate[1].$expDate[0];
-
-      if($range == 'w' )
-      {
-          $endPoint = date('Ymd', strtotime('-7 days '.$dateFormat));
-      }
-      else
-      {
-          $endPoint = $dateFormat;
-      }
-      //belum selesai
-
-      if($branch == '')
-      {
-        switch ($range)
-        {
-            case 'd':
-
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
-                break;
-             case 'm':
-
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
-                break;
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-7 days '.$dateFormat));
-
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
-
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$username;
-                break;
-
-            default:
-                # code...
-                break;
-        }
-
-        //$sp = "[spPortal_GenerateReportByBank_CMD] '$code', '$branch', '$dateFormat', '$range', '$endPoint', '$merchId', '$filename'";
-
-        $fullFileName = $filename.$extFile;
-        $fullPath = $dir.$filename.$extFile;
-
-        if (file_exists($fullPath))
-        {
-            $arrselected[$countas] = $fullFileName;
-            $countas++;
-        }
-      }
-      else if ($branch != '')
-      {
-        $files = array();
-
-        switch ($range) {
-            case 'd':
-
-                $info = "(1 day report, ".$date.")";
-
-                $start = $dateFormat;
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'DetailReportByHost_'.$dateFile."_".$branch."_".$merchant;
-                //$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-
-                $fullFileName = $filename.$extFile;
-                $fullPath = $dir.$filename.$extFile;
-
-                if (file_exists($fullPath))
-                {
-                  array_push($files, $fullFileName);
-                }
-
-                break;
-
-             case 'm':
-
-                $info = "(1 month report, ".substr($date, 3).")";
-
-                $start = date('Ym', strtotime($dateFormat));
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'DetailReportByHost_'.$dateFile."_".$username;
-
-                $first_date = '01-'.$expDate[1].'-'.$expDate[2];
-                $first_date = date('Ym01', strtotime($first_date));
-                $last_date  = date('Ymt', strtotime($first_date));
-
-                //for($i=$first_date; $i<=20170621; $i++) {
-                for($i=$first_date; $i<=$last_date; $i++) {
-
-                    $filename = 'DetailReportByHost_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
-
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
-
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$branch;
-
-                for($i=$eDate; $i<=$sDate; $i++) {
-
-                    $filename = 'DetailReportByHost_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            default:
-                # code...
-                break;
-        }
-        $arrselected = $files;
-      }
-
-      // Sort in ascending order - this is default
-      //$a = scandir($dir);
-
-      $a = array_diff(scandir($dir), array('.', '..'));
-      $b = array_diff(scandir($dir), $arrselected);
-      $num = 0;
-      $arrgoodi = array();
-
-      foreach($arrselected as $key => $value)
-      {
-        $partValue = explode('_', $value);
-        $reportType = $partValue[0];
-
-        $goodi['number'] = $num;
-        $goodi['val'] = $value;
-        $filename = $dir.$value;
-        //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-        $filemtime = filemtime($filename);
-        $filemtimez = strtotime("+420 minutes", $filemtime);
-
-        $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
-
-        $size = filesize($filename);
-
-        $decimals = 2;
-        $sz = 'BKMGTP';
-        $factor = floor((strlen($size) - 1) / 3);
-        $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
-
-        $goodi['size'] = $human_filesize."B";
-        if($reportType == 'DetailReportByHost')
-        {
-          $arrgoodi[$num] = $goodi;
-        }
-        $num++;
-        $filename = "";
-
-      }
-
-      $res['success'] = true;
-      $res['total'] = count($a);
-      $res['result'] = $arrgoodi;
-
-      return response($res);
-    }
-    catch(QueryException $ex)
-    {
-      $res['success'] = false;
-      $res['result'] = 'Query Exception.. Please Check Database!';
-
-      return response($res);
-    }
-  }
-
-  public function listReconReportBranch(Request $request)
-  {
-    try
-    {
-      // $username = 'merchant1';
-      // $branch = '6789';
-      // $merchant = '1';
-
-      $username = $request->username;
-      //$merchant = "1";
-
-      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
-
-      $data = json_encode($data);
-      $data = json_decode($data, true);
-
-      $branch = $data[0]['branch_code'];
-
-      $dir = "C://generate/";
-      $extFile = ".csv";
-
-      // Sort in ascending order - this is default
-      //$a = scandir($dir);
-
-      $a = array_diff(scandir($dir), array('.', '..'));
-      $num = 0;
-      $arrgoodi = array();
-
-      foreach($a as $key => $value)
-      {
-        $partingExt = explode('.', $value);
-        $partValue = explode('_', $partingExt[0]);
-        $reportType = $partValue[0];
-        $totalPart = count($partValue);
-
-        if($totalPart == 3)
-        {
-          //$reportType = $partValue[0];
-          //$date = $partValue[1];
-          //$username = $partValue[2];
-
-          $filename = $partValue[0]."_".$partValue[1]."_".$username.$extFile;
-          $fullPath = $dir.$value;
-
-          if (file_exists($fullPath) && $reportType == 'ReconsiliationReport' && $partValue[2] == $username)
-          {
-            $goodi['number'] = $num;
-            $goodi['val'] = $value;
-            //$filename = $dir.$value;
-            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-
-            $filemtime = filemtime($fullPath);
-            $filemtimez = strtotime("+420 minutes", $filemtime);
-
-            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
-            $size = filesize($fullPath);
-
-            $decimals = 2;
-            $sz = 'BKMGTP';
-            $factor = floor((strlen($size) - 1) / 3);
-            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
-
-            $goodi['size'] = $human_filesize."B";
-            $arrgoodi[$num] = $goodi;
-            $num++;
-            $filename = "";
-          }
-        }
-        else if($totalPart == 4)
-        {
-          //$filename = $partValue[0]."_".$partValue[1]."_".$branch."_".$merchant.$extFile;
-          $fullPath = $dir.$value;
-
-          if (file_exists($fullPath) && $reportType == 'ReconsiliationReport' && $partValue[2] == $branch)
-          {
-            $goodi['number'] = $num;
-            $goodi['val'] = $value;
-            //$filename = $dir.$value;
-            //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-            $filemtime = filemtime($fullPath);
-            $filemtimez = strtotime("+420 minutes", $filemtime);
-
-            $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
-            $size = filesize($fullPath);
-
-            $decimals = 2;
-            $sz = 'BKMGTP';
-            $factor = floor((strlen($size) - 1) / 3);
-            $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
-
-            $goodi['size'] = $human_filesize."B";
-            $arrgoodi[$num] = $goodi;
-            $num++;
-            $filename = "";
-          }
-        }
-      }
-
-      $res['success'] = true;
-      $res['total'] = count($a);
-      $res['result'] = $arrgoodi;
-
-      return response($res);
-    }
-    catch(QueryException $ex)
-    {
-      $res['success'] = false;
-      $res['result'] = 'Query Exception.. Please Check Database!';
-
-      return response($res);
-    }
-  }
-
-  public function listReconReportFilteredBranch(Request $request)
-  {
-    try
-    {
-
-      $range = $request->range;
-      $date = $request->date;
-      $username = $request->username;
-      //$merchant = "1";
-
-      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username'");
-
-      $data = json_encode($data);
-      $data = json_decode($data, true);
-
-      $branch = $data[0]['branch_code'];
-      $merchant = $data[0]['merch_id'];
-
-      $arrselected = array();
-      $countas = 0;
-
-      /*if($branch == 'All Branch')
-      {
-        $branch = '';
-      }*/
-      $now = date("YmdHis");
-
-      $dir = "C://generate/";
-      $extFile = ".csv";
-
-      if(strlen($date) == 7)
-      {
-          $date = '01/'.$date;
-      }
-
-      $expDate = explode('/', $date);
-      //$dateFormat = date('Ymd', strtotime($date));
-      $dateFormat = $expDate[2].$expDate[1].$expDate[0];
-
-      if($range == 'w' )
-      {
-          $endPoint = date('Ymd', strtotime('-7 days '.$dateFormat));
-      }
-      else
-      {
-          $endPoint = $dateFormat;
-      }
-
-      /*
-      if($branch == '')
-      {
-        switch ($range)
-        {
-            case 'd':
-
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-                break;
-             case 'm':
-
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-                break;
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-7 days '.$dateFormat));
-
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
-
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'ReconsiliationReport_'.$eDate.'_'.$sDate."_".$username;
-                break;
-
-            default:
-                # code...
-                break;
-        }
-
-        //$sp = "[spPortal_GenerateReportByBank_CMD] '$code', '$branch', '$dateFormat', '$range', '$endPoint', '$merchId', '$filename'";
-
-        $fullFileName = $filename.$extFile;
-        $fullPath = $dir.$filename.$extFile;
-
-        if (file_exists($fullPath))
-        {
-            $arrselected[$countas] = $fullFileName;
-            $countas++;
-        }
-      }
-      else */
-      if ($branch != '')
-      {
-        $files = array();
-
-        switch ($range) {
-            case 'd':
-
-                $info = "(1 day report, ".$date.")";
-
-                $start = $dateFormat;
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'ReconsiliationReport_'.$dateFile."_".$branch."_".$merchant;
-                //$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-
-                $fullFileName = $filename.$extFile;
-                $fullPath = $dir.$filename.$extFile;
-
-                if (file_exists($fullPath))
-                {
-                  array_push($files, $fullFileName);
-                }
-
-                break;
-
-             case 'm':
-
-                $info = "(1 month report, ".substr($date, 3).")";
-
-                $start = date('Ym', strtotime($dateFormat));
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-
-                $first_date = '01-'.$expDate[1].'-'.$expDate[2];
-                $first_date = date('Ym01', strtotime($first_date));
-                $last_date  = date('Ymt', strtotime($first_date));
-
-                //for($i=$first_date; $i<=20170621; $i++) {
-                for($i=$first_date; $i<=$last_date; $i++) {
-
-                    $filename = 'ReconsiliationReport_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
-
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
-
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'ReconsiliationReport_'.$eDate.'_'.$sDate."_".$branch;
-
-                for($i=$eDate; $i<=$sDate; $i++) {
-
-                    $filename = 'ReconsiliationReport_'.$i.'_'.$branch."_".$merchant;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            default:
-                # code...
-                break;
-        }
-        $arrselected = $files;
-      }
-
-      // Sort in ascending order - this is default
-      //$a = scandir($dir);
-
-      $a = array_diff(scandir($dir), array('.', '..'));
-      $b = array_diff(scandir($dir), $arrselected);
-      $num = 0;
-      $arrgoodi = array();
-
-      foreach($arrselected as $key => $value)
-      {
-        $partValue = explode('_', $value);
-        $reportType = $partValue[0];
-
-        $goodi['number'] = $num;
-        $goodi['val'] = $value;
-        $filename = $dir.$value;
-        //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-        $filemtime = filemtime($filename);
-        $filemtimez = strtotime("+420 minutes", $filemtime);
-
-        $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
-
-        $size = filesize($filename);
-
-        $decimals = 2;
-        $sz = 'BKMGTP';
-        $factor = floor((strlen($size) - 1) / 3);
-        $human_filesize = sprintf("%.{$decimals}f", $size / pow(1024, $factor)) . @$sz[$factor];
-
-        $goodi['size'] = $human_filesize."B";
-        if($reportType == 'ReconsiliationReport')
-        {
-          $arrgoodi[$num] = $goodi;
-        }
-        $num++;
-        $filename = "";
-
-      }
-
-      $res['success'] = true;
-      $res['total'] = count($a);
-      $res['result'] = $arrgoodi;
-
-      return response($res);
-    }
-    catch(QueryException $ex)
-    {
-      $res['success'] = false;
-      $res['result'] = 'Query Exception.. Please Check Database!';
-
-      return response($res);
-    }
-  }
-
 
 }

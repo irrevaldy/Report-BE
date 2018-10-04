@@ -529,4 +529,89 @@ class globalController extends Controller
         return response($res);
       }
   }
+
+  public function getBranchDataFiltered(Request $request)
+  {
+    $username = $request->username;
+
+    try
+    {
+      $data = DB::select("[spVMonitoringReport_GetUserInfoBranch] '$username' ");
+      $res['success'] = true;
+      $res['result'] = $data;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+  public function getMerchantDataFiltered(Request $request)
+  {
+    $username = $request->username;
+
+    try
+    {
+      $data = DB::select("[spVMonitoringReport_GetUserInfo] '$username' ");
+      $res['success'] = true;
+      $res['result'] = $data;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+  public function getHostDataFiltered(Request $request)
+  {
+    $username = $request->username;
+
+    try
+    {
+      $data = DB::select("[spVMonitoringReport_GetUserInfoAcquirer] '$username' ");
+      $res['success'] = true;
+      $res['result'] = $data;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
+  public function getLogo(Request $request)
+  {
+    $username = $request->username;
+
+    try
+    {
+      $data = DB::select("[spVDWH_GetLogoName] '$username' ");
+      $merch_logo 	= $data[0]->FMERCHLOGO;
+      $res['success'] = true;
+      $res['merchlogo'] = $merch_logo;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
 }

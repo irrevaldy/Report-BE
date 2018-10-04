@@ -44,6 +44,12 @@ Route::get('/bank_data', ['uses' => 'globalController@getBankData']);
 Route::post('/institute_data', ['uses' => 'globalController@getInstituteData']);
 Route::post('/policy_data', ['uses' => 'globalController@getPolicyData']);
 
+Route::post('/branch_data_filtered', ['uses' => 'globalController@getBranchDataFiltered']);
+Route::post('/host_data_filtered', ['uses' => 'globalController@getHostDataFiltered']);
+Route::post('/merchant_data_filtered', ['uses' => 'globalController@GetMerchantDataFiltered']);
+
+Route::post('/get_logo', ['uses' => 'globalController@getLogo']);
+
 /* Search transaction */
 Route::post('/search_transaction', ['uses' => 'searchTransactionController@search']);
 Route::get('/search_transaction/line_data', ['uses' => 'searchTransactionController@getLineData']);
