@@ -31,7 +31,7 @@ class corporateDashboardController extends Controller
 
 
         //total terminal
-        $q_get_total_summary = DB::select("spVDWH_GetTotalSummary '$username'");
+        $q_get_total_summary = DB::select("spDWH_DashboardCorporateSummaryData '$username'");
         $total_acquirer 	= $q_get_total_summary[0]->total_acquirer;
         $total_corporate 	= $q_get_total_summary[0]->total_corporate;
         $total_merchant 	= $q_get_total_summary[0]->total_merchant;
@@ -65,7 +65,7 @@ class corporateDashboardController extends Controller
 
         /*----------------------- ON-US OFF-US ------------------------*/
         // $q_get_onusoffus_trx = DB::select("spVDWH_GetOnUsOffUsTrxData '20170300000000', '20170400000000', '$username'");
-        $q_get_onusoffus_trx = DB::select("spVDWH_GetOnUsOffUsTrxData '$get_past1_month', '$get_current_month', '$username'");
+        $q_get_onusoffus_trx = DB::select("spDWH_DashboardCorporateOnUsOffUs  '$get_past1_month', '$get_current_month', '$username'");
         $q_get_onusoffus_trx = json_encode($q_get_onusoffus_trx);
         $q_get_onusoffus_trx = json_decode($q_get_onusoffus_trx, true);
 
@@ -144,7 +144,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_acquirer = DB::select("spVDWH_Top5AcquirerHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_acquirer = DB::select("spDWH_DashboardCorporateTop5Acquirer '$get_past3_month', '$get_current_month', '$username'");
 
         $data_top5acquirer_trx_volume 							            = array();
         $data_top5acquirer_trx_volume['label']					        = array();
@@ -233,7 +233,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_acquirer = DB::select("spVDWH_Top5AcquirerHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_acquirer = DB::select("spDWH_DashboardCorporateTop5Acquirer '$get_past3_month', '$get_current_month', '$username'");
 
         $data_top5acquirer_trx_count 							            = array();
         $data_top5acquirer_trx_count['label']					        = array();
@@ -322,7 +322,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_merchant = DB::select("spVDWH_Top5MerchantHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_merchant = DB::select("spDWH_DashboardCorporateTop5Merchant '$get_past3_month', '$get_current_month', '$username'");
         // $q_get_top5_merchant = json_encode($q_get_top5_merchant);
         // $q_get_top5_merchant = json_decode($q_get_top5_merchant, true);
 
@@ -417,7 +417,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_merchant = DB::select("spVDWH_Top5MerchantHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_merchant = DB::select("spDWH_DashboardCorporateTop5Merchant '$get_past3_month', '$get_current_month', '$username'");
         // $q_get_top5_merchant = json_encode($q_get_top5_merchant);
         // $q_get_top5_merchant = json_decode($q_get_top5_merchant, true);
 
@@ -512,7 +512,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_cardtype = DB::select("spVDWH_Top5CardtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_cardtype = DB::select("spDWH_DashboardCorporateTop5CardType '$get_past3_month', '$get_current_month', '$username'");
 
         $data_top5cardtype_trx_volume 							            = array();
         $data_top5cardtype_trx_volume['label']					        = array();
@@ -603,7 +603,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_cardtype = DB::select("spVDWH_Top5CardtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_cardtype = DB::select("spDWH_DashboardCorporateTop5CardType '$get_past3_month', '$get_current_month', '$username'");
 
         $data_top5cardtype_trx_count 							              = array();
         $data_top5cardtype_trx_count['label']					          = array();
@@ -690,7 +690,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_trxtype = DB::select("spVDWH_Top5TrxtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_trxtype = DB::select("spDWH_DashboardCorporateTop5TrxType '$get_past3_month', '$get_current_month', '$username'");
 
 
         $data_top5trxtype_trx_volume 							            = array();
@@ -783,7 +783,7 @@ class corporateDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_trxtype = DB::select("spVDWH_Top5TrxtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_trxtype = DB::select("spDWH_DashboardCorporateTop5TrxType '$get_past3_month', '$get_current_month', '$username'");
 
         $data_top5trxtype_trx_count 							              = array();
         $data_top5trxtype_trx_count['label']					          = array();

@@ -31,7 +31,7 @@ class storeDashboardController extends Controller
 
 
         //total terminal
-        $q_get_total_summary = DB::select("spVDWH_GetTotalSummary '$username'");
+        $q_get_total_summary = DB::select("spDWH_DashboardStoreSummaryData '$username'");
         $total_acquirer 	= $q_get_total_summary[0]->total_acquirer;
         $total_corporate 	= $q_get_total_summary[0]->total_corporate;
         $total_merchant 	= $q_get_total_summary[0]->total_merchant;
@@ -65,7 +65,7 @@ class storeDashboardController extends Controller
 
         /*----------------------- ON-US OFF-US ------------------------*/
         // $q_get_onusoffus_trx = DB::select("spVDWH_GetOnUsOffUsTrxData '20170300000000', '20170400000000', '$username'");
-        $q_get_onusoffus_trx = DB::select("spVDWH_GetOnUsOffUsTrxData '$get_past1_month', '$get_current_month', '$username'");
+        $q_get_onusoffus_trx = DB::select("spDWH_DashboardStoreOnUsOffUs '$get_past1_month', '$get_current_month', '$username'");
         $q_get_onusoffus_trx = json_encode($q_get_onusoffus_trx);
         $q_get_onusoffus_trx = json_decode($q_get_onusoffus_trx, true);
 
@@ -634,7 +634,7 @@ class storeDashboardController extends Controller
         //red, orange, yellow, green, blue
         $bg_color = ["rgba(255, 99, 132, 0.9)", "rgba(255, 159, 64, 0.9)", "rgba(255, 205, 86, 0.9)", "rgba(75, 192, 192, 0.9)", "rgba(54, 162, 235, 0.9)"];
         $color = ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"];
-            
+
         $i = 0;
         foreach( $data_top5trxtype_trx_count['dataset_list']['label'] as $key => $value ) {
             $data_trx_count = array(
