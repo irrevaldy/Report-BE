@@ -476,7 +476,7 @@ class otherReportController extends Controller
         $goodi['val'] = $value;
         $filename = $dir.$value;
         //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-        $filemtime = filemtime($fullPath);
+        $filemtime = filemtime($filename);
         $filemtimez = strtotime("+420 minutes", $filemtime);
 
         $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
@@ -1902,26 +1902,38 @@ public function listDetailReportAcquirer(Request $request)
   {
     try
     {
-      $merchant = $request->merchant;
       $range = $request->range;
       $date = $request->date;
       $username = $request->username;
-      //$merchant = "1";
 
       $data = DB::select("[spVMonitoringReport_GetUserInfoAcquirer] '$username'");
 
-    	$data = json_encode($data);
-    	$data = json_decode($data, true);
+      $data = json_encode($data);
+      $data = json_decode($data, true);
 
-      $acquirer = $data[0]['FNAME'];
+	    $datas = DB::select("[spVMonitoringReport_GetUserInfo] '$username'");
 
-      $arrselected = array();
+      $datas = json_encode($datas);
+      $datas = json_decode($datas, true);
+
+      //$merchant = $datas[0]['value'];
+  	  $merchant = array();
+  	  for($a = 0; $a < count($datas); $a++)
+      {
+        $merchant[$a] = $datas[$a]['value'];
+      }
+
+      $acquirer = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $acquirer[$a] = $data[$a]['FNAME'];
+      }
+
+      //$branch = $data[0]['branch_code'];
+
+	    $arrselected = array();
       $countas = 0;
 
-      /*if($branch == 'All Branch')
-      {
-        $branch = '';
-      }*/
       $now = date("YmdHis");
 
       $dir = "C://generate/";
@@ -1946,144 +1958,125 @@ public function listDetailReportAcquirer(Request $request)
       }
       //belum selesai
 
-      if($merchant == '')
+      $files = array();
+
+      switch ($range)
       {
-        switch ($range)
-        {
-            case 'd':
+          case 'd':
 
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'AcquirerDetailReport_'.$dateFile."_".$username;
-                break;
-             case 'm':
+              $info = "(1 day report, ".$date.")";
 
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'AcquirerDetailReport_'.$dateFile."_".$username;
-                break;
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-7 days '.$dateFormat));
+              $start = $dateFormat;
+              $end = $start;
 
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
+              $expDate = explode('/', $date);
+                  //$dateFormat = date('Ymd', strtotime($date));
+              $dateFile = $expDate[2].$expDate[1].$expDate[0];
+        			foreach($acquirer as $key => $value)
+        			{
+        				$acquirera = $value;
+        				foreach($merchant as $key => $value)
+        				{
+        					$merchantm = $value;
 
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'AcquirerDetailReport_'.$eDate.'_'.$sDate."_".$username;
-                break;
+        					$filename = 'AcquirerDetailReport_'.$dateFile."_".$merchantm."_".$acquirera;
+        					//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
 
-            default:
-                # code...
-                break;
-        }
+        					$fullFileName = $filename.$extFile;
+        					$fullPath = $dir.$filename.$extFile;
 
-        //$sp = "[spPortal_GenerateReportByBank_CMD] '$code', '$branch', '$dateFormat', '$range', '$endPoint', '$merchId', '$filename'";
+        					if (file_exists($fullPath))
+        					{
+        					  array_push($files, $fullFileName);
+        					}
+        				}
+        			}
 
-        $fullFileName = $filename.$extFile;
-        $fullPath = $dir.$filename.$extFile;
+              break;
 
-        if (file_exists($fullPath))
-        {
-            $arrselected[$countas] = $fullFileName;
-            $countas++;
-        }
+           case 'm':
+
+              $info = "(1 month report, ".substr($date, 3).")";
+
+              $start = date('Ym', strtotime($dateFormat));
+              $end = $start;
+
+              $expDate = explode('/', $date);
+                  //$dateFormat = date('Ymd', strtotime($date));
+              $dateFile = $expDate[2].$expDate[1];
+              //$filename = 'DetailReportByHost_'.$dateFile."_".$username;
+
+              $first_date = '01-'.$expDate[1].'-'.$expDate[2];
+              $first_date = date('Ym01', strtotime($first_date));
+              $last_date  = date('Ymt', strtotime($first_date));
+
+              //for($i=$first_date; $i<=20170621; $i++) {
+              for($i=$first_date; $i<=$last_date; $i++)
+        			{
+                foreach($acquirer as $key => $value)
+          			{
+          				$acquirera = $value;
+          				foreach($merchant as $key => $value)
+          				{
+          					$merchantm = $value;
+
+        						$filename = 'AcquirerDetailReport_'.$i.'_'.$merchantm."_".$acquirera;
+        						//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+        						$fullFileName = $filename.$extFile;
+        						$fullPath = $dir.$filename.$extFile;
+
+        						if (file_exists($fullPath))
+        						{
+        						  array_push($files, $fullFileName);
+        						}
+        					}
+
+        				}
+              }
+
+              break;
+
+          case 'w':
+              $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
+
+              $sDate = explode('/', $date);
+              $sDate = $sDate[2].$sDate[1].$sDate[0];
+
+              $eDate = explode('/', $dateN);
+              $eDate = $eDate[2].$eDate[1].$eDate[0];
+              //$filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$branch;
+
+              for($i=$eDate; $i<=$sDate; $i++)
+        			{
+                foreach($acquirer as $key => $value)
+          			{
+          				$acquirera = $value;
+          				foreach($merchant as $key => $value)
+          				{
+          					$merchantm = $value;
+
+        						$filename = 'AcquirerDetailReport_'.$i.'_'.$merchantm."_".$acquirera;
+        						//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+        						$fullFileName = $filename.$extFile;
+        						$fullPath = $dir.$filename.$extFile;
+
+        						if (file_exists($fullPath))
+        						{
+        						  array_push($files, $fullFileName);
+        						}
+        					}
+        				}
+              }
+
+              break;
+
+          default:
+              # code...
+              break;
       }
-      else if ($merchant != '')
-      {
-        $files = array();
-
-        switch ($range) {
-            case 'd':
-
-                $info = "(1 day report, ".$date.")";
-
-                $start = $dateFormat;
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'AcquirerDetailReport_'.$dateFile."_".$merchant."_".$acquirer;
-                //$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-
-                $fullFileName = $filename.$extFile;
-                $fullPath = $dir.$filename.$extFile;
-
-                if (file_exists($fullPath))
-                {
-                  array_push($files, $fullFileName);
-                }
-
-                break;
-
-             case 'm':
-
-                $info = "(1 month report, ".substr($date, 3).")";
-
-                $start = date('Ym', strtotime($dateFormat));
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'AcquirerDetailReport_'.$dateFile."_".$username;
-
-                $first_date = '01-'.$expDate[1].'-'.$expDate[2];
-                $first_date = date('Ym01', strtotime($first_date));
-                $last_date  = date('Ymt', strtotime($first_date));
-
-                //for($i=$first_date; $i<=20170621; $i++) {
-                for($i=$first_date; $i<=$last_date; $i++) {
-
-                    $filename = 'AcquirerDetailReport_'.$i.'_'.$merchant."_".$acquirer;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
-
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
-
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                //$filename = 'AcquirerDetailReport_'.$eDate.'_'.$sDate."_".$merchant;
-
-                for($i=$eDate; $i<=$sDate; $i++) {
-
-                    $filename = 'AcquirerDetailReport_'.$i.'_'.$merchant."_".$acquirer;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            default:
-                # code...
-                break;
-        }
-        $arrselected = $files;
-      }
+      $arrselected = $files;
 
       // Sort in ascending order - this is default
       //$a = scandir($dir);
@@ -2106,6 +2099,7 @@ public function listDetailReportAcquirer(Request $request)
         $filemtimez = strtotime("+420 minutes", $filemtime);
 
         $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+
         $size = filesize($filename);
 
         $decimals = 2;
@@ -2124,7 +2118,6 @@ public function listDetailReportAcquirer(Request $request)
       }
 
       $res['success'] = true;
-
       $res['total'] = count($a);
       $res['result'] = $arrgoodi;
 
@@ -2263,26 +2256,38 @@ public function listDetailReportAcquirer(Request $request)
   {
     try
     {
-      $merchant = $request->merchant;
       $range = $request->range;
       $date = $request->date;
       $username = $request->username;
-      //$merchant = "1";
 
       $data = DB::select("[spVMonitoringReport_GetUserInfoAcquirer] '$username'");
 
-    	$data = json_encode($data);
-    	$data = json_decode($data, true);
+      $data = json_encode($data);
+      $data = json_decode($data, true);
 
-      $acquirer = $data[0]['FNAME'];
+	    $datas = DB::select("[spVMonitoringReport_GetUserInfo] '$username'");
 
-      $arrselected = array();
+      $datas = json_encode($datas);
+      $datas = json_decode($datas, true);
+
+      //$merchant = $datas[0]['value'];
+  	  $merchant = array();
+  	  for($a = 0; $a < count($datas); $a++)
+      {
+        $merchant[$a] = $datas[$a]['value'];
+      }
+
+      $acquirer = array();
+      for($a = 0; $a < count($data); $a++)
+      {
+        $acquirer[$a] = $data[$a]['FNAME'];
+      }
+
+      //$branch = $data[0]['branch_code'];
+
+	    $arrselected = array();
       $countas = 0;
 
-      /*if($branch == 'All Branch')
-      {
-        $branch = '';
-      }*/
       $now = date("YmdHis");
 
       $dir = "C://generate/";
@@ -2307,144 +2312,125 @@ public function listDetailReportAcquirer(Request $request)
       }
       //belum selesai
 
-      if($merchant == '')
+      $files = array();
+
+      switch ($range)
       {
-        switch ($range)
-        {
-            case 'd':
+          case 'd':
 
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'AcquirerReconsiliationReport_'.$dateFile."_".$username;
-                break;
-             case 'm':
+              $info = "(1 day report, ".$date.")";
 
-                $expDate = explode('/', $date);
-                //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'AcquirerReconsiliationReport_'.$dateFile."_".$username;
-                break;
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-7 days '.$dateFormat));
+              $start = $dateFormat;
+              $end = $start;
 
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
+              $expDate = explode('/', $date);
+                  //$dateFormat = date('Ymd', strtotime($date));
+              $dateFile = $expDate[2].$expDate[1].$expDate[0];
+        			foreach($acquirer as $key => $value)
+        			{
+        				$acquirera = $value;
+        				foreach($merchant as $key => $value)
+        				{
+        					$merchantm = $value;
 
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'AcquirerReconsiliationReport_'.$eDate.'_'.$sDate."_".$username;
-                break;
+        					$filename = 'AcquirerReconsiliationReport_'.$dateFile."_".$merchantm."_".$acquirera;
+        					//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
 
-            default:
-                # code...
-                break;
-        }
+        					$fullFileName = $filename.$extFile;
+        					$fullPath = $dir.$filename.$extFile;
 
-        //$sp = "[spPortal_GenerateReportByBank_CMD] '$code', '$branch', '$dateFormat', '$range', '$endPoint', '$merchId', '$filename'";
+        					if (file_exists($fullPath))
+        					{
+        					  array_push($files, $fullFileName);
+        					}
+        				}
+        			}
 
-        $fullFileName = $filename.$extFile;
-        $fullPath = $dir.$filename.$extFile;
+              break;
 
-        if (file_exists($fullPath))
-        {
-            $arrselected[$countas] = $fullFileName;
-            $countas++;
-        }
+           case 'm':
+
+              $info = "(1 month report, ".substr($date, 3).")";
+
+              $start = date('Ym', strtotime($dateFormat));
+              $end = $start;
+
+              $expDate = explode('/', $date);
+                  //$dateFormat = date('Ymd', strtotime($date));
+              $dateFile = $expDate[2].$expDate[1];
+              //$filename = 'DetailReportByHost_'.$dateFile."_".$username;
+
+              $first_date = '01-'.$expDate[1].'-'.$expDate[2];
+              $first_date = date('Ym01', strtotime($first_date));
+              $last_date  = date('Ymt', strtotime($first_date));
+
+              //for($i=$first_date; $i<=20170621; $i++) {
+              for($i=$first_date; $i<=$last_date; $i++)
+        			{
+                foreach($acquirer as $key => $value)
+          			{
+          				$acquirera = $value;
+          				foreach($merchant as $key => $value)
+          				{
+          					$merchantm = $value;
+
+        						$filename = 'AcquirerReconsiliationReport_'.$i.'_'.$merchantm."_".$acquirera;
+        						//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+        						$fullFileName = $filename.$extFile;
+        						$fullPath = $dir.$filename.$extFile;
+
+        						if (file_exists($fullPath))
+        						{
+        						  array_push($files, $fullFileName);
+        						}
+        					}
+
+        				}
+              }
+
+              break;
+
+          case 'w':
+              $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
+
+              $sDate = explode('/', $date);
+              $sDate = $sDate[2].$sDate[1].$sDate[0];
+
+              $eDate = explode('/', $dateN);
+              $eDate = $eDate[2].$eDate[1].$eDate[0];
+              //$filename = 'DetailReportByHost_'.$eDate.'_'.$sDate."_".$branch;
+
+              for($i=$eDate; $i<=$sDate; $i++)
+        			{
+                foreach($acquirer as $key => $value)
+          			{
+          				$acquirera = $value;
+          				foreach($merchant as $key => $value)
+          				{
+          					$merchantm = $value;
+
+        						$filename = 'AcquirerReconsiliationReport_'.$i.'_'.$merchantm."_".$acquirera;
+        						//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+
+        						$fullFileName = $filename.$extFile;
+        						$fullPath = $dir.$filename.$extFile;
+
+        						if (file_exists($fullPath))
+        						{
+        						  array_push($files, $fullFileName);
+        						}
+        					}
+        				}
+              }
+
+              break;
+
+          default:
+              # code...
+              break;
       }
-      else if ($merchant != '')
-      {
-        $files = array();
-
-        switch ($range) {
-            case 'd':
-
-                $info = "(1 day report, ".$date.")";
-
-                $start = $dateFormat;
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1].$expDate[0];
-                $filename = 'AcquirerReconsiliationReport_'.$dateFile."_".$merchant."_".$acquirer;
-                //$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
-
-                $fullFileName = $filename.$extFile;
-                $fullPath = $dir.$filename.$extFile;
-
-                if (file_exists($fullPath))
-                {
-                  array_push($files, $fullFileName);
-                }
-
-                break;
-
-             case 'm':
-
-                $info = "(1 month report, ".substr($date, 3).")";
-
-                $start = date('Ym', strtotime($dateFormat));
-                $end = $start;
-
-                $expDate = explode('/', $date);
-                    //$dateFormat = date('Ymd', strtotime($date));
-                $dateFile = $expDate[2].$expDate[1];
-                $filename = 'AcquirerReconsiliationReport_'.$dateFile."_".$username;
-
-                $first_date = '01-'.$expDate[1].'-'.$expDate[2];
-                $first_date = date('Ym01', strtotime($first_date));
-                $last_date  = date('Ymt', strtotime($first_date));
-
-                //for($i=$first_date; $i<=20170621; $i++) {
-                for($i=$first_date; $i<=$last_date; $i++) {
-
-                    $filename = 'AcquirerReconsiliationReport_'.$i.'_'.$merchant."_".$acquirer;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            case 'w':
-                $dateN = date('d/m/Y', strtotime('-6 days '.$dateFormat));
-
-                $sDate = explode('/', $date);
-                $sDate = $sDate[2].$sDate[1].$sDate[0];
-
-                $eDate = explode('/', $dateN);
-                $eDate = $eDate[2].$eDate[1].$eDate[0];
-                $filename = 'AcquirerReconsiliationReport_'.$eDate.'_'.$sDate."_".$merchant;
-
-                for($i=$eDate; $i<=$sDate; $i++) {
-
-                    $filename = 'AcquirerReconsiliationReport_'.$i.'_'.$merchant."_".$acquirer;
-                    //$filename = 'ReconsiliationReport_'.$i.'_'.$username;
-                    $fullFileName = $filename.$extFile;
-                    $fullPath = $dir.$filename.$extFile;
-
-                    if (file_exists($fullPath))
-                    {
-                      array_push($files, $fullFileName);
-                    }
-
-                }
-
-                break;
-
-            default:
-                # code...
-                break;
-        }
-        $arrselected = $files;
-      }
+      $arrselected = $files;
 
       // Sort in ascending order - this is default
       //$a = scandir($dir);
@@ -2463,10 +2449,11 @@ public function listDetailReportAcquirer(Request $request)
         $goodi['val'] = $value;
         $filename = $dir.$value;
         //$goodi['datecreated'] = date ("d F Y H:i:s", filectime($filename));
-        $filemtime = filemtime($fullPath);
+        $filemtime = filemtime($filename);
         $filemtimez = strtotime("+420 minutes", $filemtime);
 
         $goodi['datemodified'] = date ("d F Y H:i:s", $filemtimez);
+
         $size = filesize($filename);
 
         $decimals = 2;

@@ -42,6 +42,7 @@ class corporateDashboardController extends Controller
         $terminal_active 	= $q_get_total_summary[0]->total_active;
         $terminal_inactive 	= $q_get_total_summary[0]->total_inactive;
         $total_active_trx 	= $q_get_total_summary[0]->total_active_trx;
+        $total_active_wo_trx = $terminal_active - $total_active_trx;
 
         $total_trx_volume 	= $q_get_total_summary[0]->total_trx_volume;
         $total_trx_success 	= $q_get_total_summary[0]->total_trx_success;
@@ -57,6 +58,7 @@ class corporateDashboardController extends Controller
         $res['terminal_active'] 	= $terminal_active;
         $res['terminal_inactive'] 	= $terminal_inactive;
         $res['total_active_trx'] 	= $total_active_trx;
+        $res['total_active_wo_trx'] = $total_active_wo_trx;
         $res['total_trx_volume'] 	= $total_trx_volume;
         $res['total_trx_success'] 	= $total_trx_success;
         $res['total_trx_failed'] 	= $total_trx_failed;

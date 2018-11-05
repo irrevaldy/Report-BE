@@ -225,6 +225,9 @@ Route::post('/user_data_update', 										['uses' => 'userController@updateUser
 Route::post('/user_data_delete', 										['uses' => 'userController@deleteUserData']);
 Route::get('/user_filter_type_data/{id_user}', 							['uses' => 'userController@getUserFilterTypeData']);
 Route::get('/filter_value_option/{filter_type}', 					    ['uses' => 'userController@getFilterValueOption']);
+Route::post('/filter_value_option_augmented', 					    ['uses' => 'userController@getFilterValueOptionAugmented']);
+Route::get('/filter_value_option_selected/{filter_type}/{user_id}', 					    ['uses' => 'userController@getFilterValueOptionSelected']);
+Route::post('/filter_value_option_selected_augmented', 					    ['uses' => 'userController@getFilterValueOptionSelectedAugmented']);
 Route::get('/user_privilege/{username}', 								['uses' => 'userController@getUserPrivilegeData']);
 
 /* Subgroup Setup */
