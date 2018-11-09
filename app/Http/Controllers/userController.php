@@ -1,6 +1,10 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
+
+ini_set('max_input_vars', 1000000);
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;

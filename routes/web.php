@@ -266,3 +266,5 @@ Route::get('/filter_type_data/{id_filter_type}', 						['uses' => 'filterTypeCon
 Route::post('/filter_type_data_insert', 								['uses' => 'filterTypeController@insertFilterTypeData']);
 Route::post('/filter_type_data_update', 								['uses' => 'filterTypeController@updateFilterTypeData']);
 Route::post('/filter_type_data_delete', 								['uses' => 'filterTypeController@deleteFilterTypeData']);
+
+Route::get('/get_terminal_location',['uses' => 'GlobalController@getTerminalLocationData']);

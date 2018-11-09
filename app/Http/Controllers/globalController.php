@@ -614,4 +614,31 @@ class globalController extends Controller
       return response($res);
     }
   }
+
+  public function getTerminalLocationData(Request $request)
+  {
+    try
+    {
+      $data = DB::select("[spVDWH_GetTerminalLocation]");
+      $data = json_encode($data);
+      $data = json_decode($data, true);
+
+      foreach($data as $key => $value){
+        $data[$key]['lat'] = (float) $data[$key]['lat'];
+        $data[$key]['lng'] = (float) $data[$key]['lng'];
+      }
+
+      $res['success'] = true;
+      $res['result'] = $data;
+
+      return response($res);
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
 }
