@@ -14,6 +14,8 @@
 // Route::get('/menu/main/{groupid}/{token}',['uses' => 'MenuController@getMenuMain']);
 // Route::get('/menu/regular/{groupid}/{token}',['uses' => 'MenuController@getMenuRegular']);
 
+Route::post('/ftp_file_filtered', ['uses' => 'ftpFileController@ftpFileFiltered']);
+Route::get('/downloadFile','ftpFileController@downloadFile');
 //menu
 Route::get('/menu/main/{group_id}/{user_id}/{api_token}',['uses' => 'MenuController@getMenuMain']);
 Route::get('/menu/regular/{group_id}/{user_id}/{api_token}',['uses' => 'MenuController@getMenuRegular']);
@@ -122,19 +124,35 @@ Route::get('/serviceprovider_get_data', ['uses' => 'serviceproviderDashboardCont
 
 Route::post('/list_detail_report', ['uses' => 'otherReportController@listDetailReport']);
 Route::post('/list_detail_report_filtered', ['uses' => 'otherReportController@listDetailReportFiltered']);
+Route::post('/list_detail_report_filtered_settlement', ['uses' => 'otherReportController@listDetailReportFilteredSettlement']);
 
 Route::post('/list_recon_report', ['uses' => 'otherReportController@listReconReport']);
 Route::post('/list_recon_report_filtered', ['uses' => 'otherReportController@listReconReportFiltered']);
+Route::post('/list_recon_report_filtered_settlement', ['uses' => 'otherReportController@listReconReportFilteredSettlement']);
 
 Route::post('/list_detail_report_acquirer', ['uses' => 'otherReportController@listDetailReportAcquirer']);
 Route::post('/list_detail_report_filtered_acquirer', ['uses' => 'otherReportController@listDetailReportFilteredAcquirer']);
+Route::post('/list_detail_report_filtered_acquirer_settlement', ['uses' => 'otherReportController@listDetailReportFilteredAcquirerSettlement']);
 Route::post('/list_recon_report_acquirer', ['uses' => 'otherReportController@listReconReportAcquirer']);
 Route::post('/list_recon_report_filtered_acquirer', ['uses' => 'otherReportController@listReconReportFilteredAcquirer']);
+Route::post('/list_recon_report_filtered_acquirer_settlement', ['uses' => 'otherReportController@listReconReportFilteredAcquirerSettlement']);
 
 Route::post('/list_detail_report_branch', ['uses' => 'otherReportController@listDetailReportBranch']);
 Route::post('/list_detail_report_filtered_branch', ['uses' => 'otherReportController@listDetailReportFilteredBranch']);
+Route::post('/list_detail_report_filtered_branch_settlement', ['uses' => 'otherReportController@listDetailReportFilteredBranchSettlement']);
 Route::post('/list_recon_report_branch', ['uses' => 'otherReportController@listReconReportBranch']);
 Route::post('/list_recon_report_filtered_branch', ['uses' => 'otherReportController@listReconReportFilteredBranch']);
+Route::post('/list_recon_report_filtered_branch_settlement', ['uses' => 'otherReportController@listReconReportFilteredBranchSettlement']);
+
+/*
+Route::post('/list_detail_report_filtered_provider', ['uses' => 'otherReportController@listDetailReportFilteredProvider']);
+Route::post('/list_detail_report_filtered_provider_settlement', ['uses' => 'otherReportController@listDetailReportFilteredProviderSettlement']);
+Route::post('/list_recon_report_filtered_provider', ['uses' => 'otherReportController@listReconReportFilteredProvider']);
+Route::post('/list_recon_report_filtered_provider_settlement', ['uses' => 'otherReportController@listReconReportFilteredProviderSettlement']);
+*/
+
+Route::post('/inactive_tid_filtered', ['uses' => 'inactiveTIDController@listInactiveTIDFiltered']);
+Route::post('/inactive_terminal_filtered', ['uses' => 'activeTerminalController@listInactiveTerminalFiltered']);
 
 Route::post('/zip_list_report', ['uses' => 'otherReportController@zipListReport']);
 

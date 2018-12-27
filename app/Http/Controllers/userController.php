@@ -371,7 +371,7 @@ class userController extends Controller
 			}
 		} catch(Exception $ex){
 			$res['success'] = false;
-			$res['message'] = 'Query Exception.. Please Check Database!';
+			$res['message'] = 'Insert Failed. Please Check All Your Data and Filter Type!';
 			DB::rollback();
 			return response($res);
 		}
@@ -666,7 +666,7 @@ class userController extends Controller
 
 		} catch(Exception $ex){
 			$res['success'] = false;
-			$res['message'] = 'Query Exception.. Please Check Database!';
+		   $res['message'] = 'Update Failed. Please Check All Your Data and Filter Type';
       //$res['message'] = $ex->getMessage();
       DB::rollback();
 			return response($res);
