@@ -151,6 +151,10 @@ Route::post('/list_recon_report_filtered_provider', ['uses' => 'otherReportContr
 Route::post('/list_recon_report_filtered_provider_settlement', ['uses' => 'otherReportController@listReconReportFilteredProviderSettlement']);
 */
 
+Route::post('/acquirer_monthly_by_merchant_filtered', ['uses' => 'monthlyAcquirerController@listMonthlyByMerchantFiltered']);
+
+Route::post('/merchant_monthly_by_acquirer_filtered', ['uses' => 'monthlyMerchantController@listMonthlyByAcquirerFiltered']);
+
 Route::post('/inactive_tid_filtered', ['uses' => 'inactiveTIDController@listInactiveTIDFiltered']);
 Route::post('/inactive_terminal_filtered', ['uses' => 'activeTerminalController@listInactiveTerminalFiltered']);
 

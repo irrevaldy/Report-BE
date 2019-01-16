@@ -611,7 +611,7 @@ class acquirerDashboardController extends Controller
 
         $arr_mon = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        $q_get_top5_trxtype = DB::select("spVDWH_Top5TrxtypeHighestTrx '$get_past3_month', '$get_current_month', '$username'");
+        $q_get_top5_trxtype = DB::select("spDWH_DashboardAcquirerTop5TrxType '$get_past3_month', '$get_current_month', '$username'");
 
         $data_top5trxtype_trx_count 							              = array();
         $data_top5trxtype_trx_count['label']					          = array();
