@@ -150,10 +150,15 @@ Route::post('/list_detail_report_filtered_provider_settlement', ['uses' => 'othe
 Route::post('/list_recon_report_filtered_provider', ['uses' => 'otherReportController@listReconReportFilteredProvider']);
 Route::post('/list_recon_report_filtered_provider_settlement', ['uses' => 'otherReportController@listReconReportFilteredProviderSettlement']);
 */
+Route::post('/provider_by_corporate_filtered', ['uses' => 'providerReportController@listByCorporateFiltered']);
+Route::post('/provider_by_acquirer_filtered', ['uses' => 'providerReportController@listByAcquirerFiltered']);
 
-Route::post('/acquirer_monthly_by_merchant_filtered', ['uses' => 'monthlyAcquirerController@listMonthlyByMerchantFiltered']);
+Route::post('/acquirer_by_merchant_filtered', ['uses' => 'acquirerReportController@listByMerchantFiltered']);
+Route::post('/acquirer_onus_offus_by_merchant_filtered', ['uses' => 'acquirerReportController@listOnUsOffUsByMerchantFiltered']);
 
-Route::post('/merchant_monthly_by_acquirer_filtered', ['uses' => 'monthlyMerchantController@listMonthlyByAcquirerFiltered']);
+Route::post('/merchant_by_acquirer_filtered', ['uses' => 'merchantReportController@listByAcquirerFiltered']);
+Route::post('/merchant_by_branch_filtered', ['uses' => 'merchantReportController@listByBranchFiltered']);
+Route::post('/merchant_top10_highest_branch_filtered', ['uses' => 'merchantReportController@listTop10HighestBranchFiltered']);
 
 Route::post('/inactive_tid_filtered', ['uses' => 'inactiveTIDController@listInactiveTIDFiltered']);
 Route::post('/inactive_terminal_filtered', ['uses' => 'activeTerminalController@listInactiveTerminalFiltered']);
