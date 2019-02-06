@@ -374,19 +374,19 @@ class otherReportController extends Controller
                 $expDate = explode('/', $date);
                     //$dateFormat = date('Ymd', strtotime($date));
                 $dateFile = $expDate[2].$expDate[1].$expDate[0];
-				foreach($merchant as $key => $value)
-				{
-					$filename = 'DetailReportByHost_'.$dateFile."_".$branch."_".$value;
-					//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
+        				foreach($merchant as $key => $value)
+        				{
+        					$filename = 'DetailReportByHost_'.$dateFile."_".$branch."_".$value;
+        					//$filename = 'ReconsiliationReport_'.$dateFile."_".$username;
 
-					$fullFileName = $filename.$extFile;
-					$fullPath = $dir.$filename.$extFile;
+        					$fullFileName = $filename.$extFile;
+        					$fullPath = $dir.$filename.$extFile;
 
-					if (file_exists($fullPath))
-					{
-					  array_push($files, $fullFileName);
-					}
-				}
+        					if (file_exists($fullPath))
+        					{
+        					  array_push($files, $fullFileName);
+        					}
+        				}
 
                 break;
 
@@ -444,7 +444,9 @@ class otherReportController extends Controller
 						$fullFileName = $filename.$extFile;
 						$fullPath = $dir.$filename.$extFile;
 
-						if (file_exists($fullPath))
+            $exists = Storage::disk('tms_ftp')->exists('//generate//'.$fullFileName);
+
+						if (file_exists($exists))
 						{
 						  array_push($files, $fullFileName);
 						}

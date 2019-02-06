@@ -15,7 +15,8 @@
 // Route::get('/menu/regular/{groupid}/{token}',['uses' => 'MenuController@getMenuRegular']);
 
 Route::post('/ftp_file_filtered', ['uses' => 'ftpFileController@ftpFileFiltered']);
-Route::get('/downloadFile','ftpFileController@downloadFile');
+
+Route::post('/downloadFile', ['uses' => 'ftpFileController@downloadFile']);
 //menu
 Route::get('/menu/main/{group_id}/{user_id}/{api_token}',['uses' => 'MenuController@getMenuMain']);
 Route::get('/menu/regular/{group_id}/{user_id}/{api_token}',['uses' => 'MenuController@getMenuRegular']);
@@ -124,10 +125,12 @@ Route::get('/serviceprovider_get_data', ['uses' => 'serviceproviderDashboardCont
 
 Route::post('/list_detail_report', ['uses' => 'otherReportController@listDetailReport']);
 Route::post('/list_detail_report_filtered', ['uses' => 'otherReportController@listDetailReportFiltered']);
+Route::post('/list_detail_report_filtered_ftp', ['uses' => 'providerReportController@listDetailReportFilteredFtp']);
 Route::post('/list_detail_report_filtered_settlement', ['uses' => 'otherReportController@listDetailReportFilteredSettlement']);
 
+
 Route::post('/list_recon_report', ['uses' => 'otherReportController@listReconReport']);
-Route::post('/list_recon_report_filtered', ['uses' => 'otherReportController@listReconReportFiltered']);
+Route::post('/list_recon_report_filtered_ftp', ['uses' => 'providerReportController@listReconReportFilteredFtp']);
 Route::post('/list_recon_report_filtered_settlement', ['uses' => 'otherReportController@listReconReportFilteredSettlement']);
 
 Route::post('/list_detail_report_acquirer', ['uses' => 'otherReportController@listDetailReportAcquirer']);
@@ -164,6 +167,9 @@ Route::post('/inactive_tid_filtered', ['uses' => 'inactiveTIDController@listInac
 Route::post('/inactive_terminal_filtered', ['uses' => 'activeTerminalController@listInactiveTerminalFiltered']);
 
 Route::post('/zip_list_report', ['uses' => 'otherReportController@zipListReport']);
+//Route::post('/zip_list_report_ftp', ['uses' => 'ftpFileController@zipListReport']);
+Route::post('/zip_list_report_ftp', ['uses' => 'providerReportController@zipListReportFtp']);
+
 
 // Route::get('/provider_get_data', ['uses' => 'providerDashboardController@getdata']);
 

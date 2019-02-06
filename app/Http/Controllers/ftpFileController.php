@@ -23,7 +23,7 @@ class ftpFileController extends Controller
 
       //$a = array_diff(scandir($dir), array('.', '..'));
     //  $b = array_diff(scandir($dir), $arrselected);
-      $path2 = '/A920_Aslan_Citibank/1.0.0.0';
+      $path2 = '/generate';
 
       //return $zombie;
       $filecontent = Storage::disk('tms_ftp')->files($path2);
@@ -81,6 +81,68 @@ class ftpFileController extends Controller
     }
   }
 
+  public function zipListReport(Request $request)
+  {
+    try
+    {
+      $checkedA = $request->checkedA;
+       //$checkedA = ["DetailReportByHost_20180629_0000_1.csv","DetailReportByHost_20180629_6789_1.csv","DetailReportByHost_20180629_A003_1.csv","DetailReportByHost_20180629_AllBranch_1.csv","DetailReportByHost_20180629_BGD_1.csv","DetailReportByHost_20180629_G001_1.csv","DetailReportByHost_20180629_TEST_1.csv","DetailReportByHost_20180630_0000_1.csv","DetailReportByHost_20180630_6789_1.csv","DetailReportByHost_20180630_A003_1.csv"]  ;
+
+      $dir = "C://generate/";
+
+      $zipname = time().'AllReport.zip';
+      $public_dir = storage_path("app");
+
+      $zip = new ZipArchive;
+
+      if (file_exists($public_dir.$zipname)) {
+          $zip->open($public_dir . '/' . $zipname, ZIPARCHIVE::OVERWRITE );
+      } else {
+          $zip->open($public_dir . '/' . $zipname, ZIPARCHIVE::CREATE );
+      }
+
+      foreach($checkedA as $file)
+      {
+        $path = Storage::disk('tms_ftp')->url($file);
+        //echo $file;
+        //echo "<br>";
+        $zip->addFile($path, $file);
+      }
+
+      $zip->close();
+
+
+
+    //  Storage::disk('local')->put('AllReport.zip', $zipname);
+      //return response()->download($zipname);
+    //header('Content-Type: application/zip');
+      //header('Content-disposition: attachment; filename='.$zipname);
+      // header('Content-Length: ' . filesize($zipname));
+      // header("Pragma: no-cache");
+      // header("Expires: 0");
+
+      $header = array(
+                   'Content-Type' => 'application/octet-stream',
+               );
+      return response()->download(storage_path("app/".$zipname), $zipname, $header)->deleteFileAfterSend(true);
+      //return Storage::download($zipname);
+
+      // $res['success'] = true;
+      // //$res['total'] = count($a);
+      // $res['result'] = $zipname;
+      // //
+      // return response($res);
+
+    }
+    catch(QueryException $ex)
+    {
+      $res['success'] = false;
+      $res['result'] = 'Query Exception.. Please Check Database!';
+
+      return response($res);
+    }
+  }
+
   public function downloadFile(Request $request)
   {
     $zombie = 0;
@@ -92,24 +154,18 @@ class ftpFileController extends Controller
     }
 
     $path = '/A920_Aslan_Citibank/1.0.0.0/citibank_ico.png';
-    $path2 = '/A920_Aslan_Citibank/1.0.0.0';
+    //$path2 = '/A920_Aslan_Citibank/1.0.0.0';
+    $path2 = '/generate';
 
-    $path3 = '/project/'.$nama.'/'.$nama_file;
+    //$path3 = '/project/'.$nama.'/'.$nama_file;
 
     //return $zombie;
-    $filecontent = Storage::disk('tms_ftp')->files($path2);
 
-    $file[] = $filecontent[0];
+    //$filecontent = Storage::disk('tms_ftp')->get($path);
 
-    return $file;
+    //Storage::disk('local')->put('citibank_ico.png', $filecontent);
 
-
-
-    $filecontent = Storage::disk('tms_ftp')->get($path);
-
-    Storage::disk('local')->put('citibank_ico.png', $filecontent);
-
-    $fileName = 'citibank_ico.png';
+    //$fileName = 'citibank_ico.png';
 
     //$filecontent = $ftp->get($file); // read file content
          // download file.
@@ -137,11 +193,24 @@ class ftpFileController extends Controller
         $zip->open($public_dir . '/' . $zipname, ZIPARCHIVE::CREATE );
     }
 
-    $zip->addFile($public_dir.'/'.$fileName, $fileName);
+    $filecontent = Storage::disk('tms_ftp')->files($path2);
+
+    foreach($filecontent as $key => $path)
+    {
+      $fullvalueExplode = explode('/', $path);
+      $fileName = $fullvalueExplode[2];
+
+      //$exists = Storage::disk('local')->exists($fileName);
+      //if(Storage::disk('tms_ftp')->exists('index-.html'))
+      $filecontent = Storage::disk('tms_ftp')->get($path);
+
+      Storage::disk('local')->put($fileName, $filecontent);
+
+      $zip->addFile($public_dir.'/'.$fileName, $fileName);
+
+    }
 
     $zip->close();
-
-
 
   //  Storage::disk('local')->put('AllReport.zip', $zipname);
     //return response()->download($zipname);
